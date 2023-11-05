@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -26,5 +27,6 @@ public class Apply {
     private String emailAddress;
     private String snsAddress;
     private String reason;
+    @CreationTimestamp
     private java.sql.Date applicationDate;
 }
