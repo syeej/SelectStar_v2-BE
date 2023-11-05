@@ -13,7 +13,10 @@ import java.util.Objects;
 @ToString
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Meeting {
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -31,7 +34,7 @@ public class Meeting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer meetingId;
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name="userId", referencedColumnName = "userId")
     private User user;
     private String title;
     private int category;
@@ -51,22 +54,22 @@ public class Meeting {
     @ColumnDefault("0")
     private int deleted; // 0:삭제X 1:삭제
 
-    @Builder
-    public Meeting(Integer meetingId,String title, int category, int status, Date applicationDeadline, int views, int recruitmentCount, int applicationCount, String location, String description, Date creationDate, String interestLanguage, String interestFramework, String interestJob) {
-        this.meetingId = meetingId;
-        this.title = title;
-        this.category = category;
-        this.status = status;
-        this.applicationDeadline = applicationDeadline;
-        this.views = views;
-        this.recruitmentCount = recruitmentCount;
-        this.applicationCount = applicationCount;
-        this.location = location;
-        this.description = description;
-        this.creationDate = creationDate;
-        this.interestLanguage = interestLanguage;
-        this.interestFramework = interestFramework;
-        this.interestJob = interestJob;
-
-    }
+//    @Builder
+//    public Meeting(User user,String title, int category, int status, Date applicationDeadline, int views, int recruitmentCount, int applicationCount, String location, String description, Date creationDate, String interestLanguage, String interestFramework, String interestJob) {
+//        this.user = user;
+//        this.title = title;
+//        this.category = category;
+//        this.status = status;
+//        this.applicationDeadline = applicationDeadline;
+//        this.views = views;
+//        this.recruitmentCount = recruitmentCount;
+//        this.applicationCount = applicationCount;
+//        this.location = location;
+//        this.description = description;
+//        this.creationDate = creationDate;
+//        this.interestLanguage = interestLanguage;
+//        this.interestFramework = interestFramework;
+//        this.interestJob = interestJob;
+//
+//    }
 }

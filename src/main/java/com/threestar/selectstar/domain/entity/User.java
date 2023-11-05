@@ -49,8 +49,7 @@ public class User {
     }
 
     @Builder
-    public User(int userId, String name, String password, String email, String nickname, String location1, String location2, Date joinDate, byte[] profilePhoto, String aboutMe, String profileContent, String interestLanguage, String interestFramework, String interestJob) {
-        this.userId = userId;
+    public User(String name, String password, String email, String nickname, String location1, String location2, Date joinDate, byte[] profilePhoto, String aboutMe, String profileContent, String interestLanguage, String interestFramework, String interestJob) {
         this.name = name;
         this.password = password;
         this.email = email;

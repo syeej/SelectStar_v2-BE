@@ -36,7 +36,7 @@ class UserRepositoryTest {
     void 데이터_저장후_조회(){
         // given
         User user1 = User.builder()
-                .userId(1)
+
                 .aboutMe("gd")
                 .email("starc13@naver.com")
                 .interestFramework("_0_")
