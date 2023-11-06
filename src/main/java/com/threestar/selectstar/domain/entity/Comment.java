@@ -13,7 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int commentId;
+    private Integer commentId;
     @ManyToOne
     @JoinColumn(name="userId")
     private User user;

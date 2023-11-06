@@ -1,29 +1,28 @@
 package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Comment;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+import java.util.List;
+
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.NONE)
 @DataJpaTest
 class CommentRepositoryTest {
 
     @Autowired
-    CommentRepository commRepo;
+    CommentRepository commentRepository;
 
-    @BeforeEach
-    void hr(){
-        System.out.println("=".repeat(100));
+    void 모든_목록_조회(){
+        List<Comment> all = commentRepository.findAll();
+        all.forEach(System.out::println);
     }
-    @Test
-    @Order(1)
-    void one(){
-        Comment c = commRepo.findById(2).get();
-        System.out.println(c);
-    }
-
-
 }
