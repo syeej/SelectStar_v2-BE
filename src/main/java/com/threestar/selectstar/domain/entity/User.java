@@ -8,12 +8,12 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.Objects;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @Entity
-@NoArgsConstructor
-@Table(name = "user_table")
+@Table(name = "user_table") //h2 테스트 용도
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,8 +63,5 @@ public class User {
         this.interestLanguage = interestLanguage;
         this.interestFramework = interestFramework;
         this.interestJob = interestJob;
-
     }
-
 }
-

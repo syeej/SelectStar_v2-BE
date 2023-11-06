@@ -2,8 +2,6 @@ package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Meeting;
 import com.threestar.selectstar.domain.entity.User;
-import org.aspectj.lang.annotation.Before;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -12,16 +10,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
@@ -151,6 +146,11 @@ class MeetingRepositoryTest {
     @Test
     void 삭제_안된_카테고리_미팅(){
         //given before
+        List<Meeting> all = meetingRepository.findAll();
+        for (Object ele:
+             all) {
+            System.out.println(ele);
+        }
         //when
         List<Meeting> byDeletedIsAndCategoryIs = meetingRepository.findByDeletedIsAndCategoryIsOrderByCreationDateDesc(0, 0);
         List<Meeting> byDeletedIsAndCategoryIs1 = meetingRepository.findByDeletedIsAndCategoryIsOrderByCreationDateDesc(0, 1);
@@ -175,17 +175,18 @@ class MeetingRepositoryTest {
     }
     @Order(5)
     @Test
-    void 조회수_1올리기(){
+    void 조회수_1올리기() {
         // given before
         // when
-        Meeting meeting = meetingRepository.findAll().get(0);
+        Meeting meeting = meetingRepository.findAll().get(1);
         Integer count1 = meeting.getViews();
-        meeting.setViews(meeting.getViews()+1);
+        meeting.setViews(meeting.getViews() + 1);
         meetingRepository.save(meeting);
         Integer count2 = meetingRepository.findById(meeting.getMeetingId()).get().getViews();
         // then
         assertThat(count1).isNotEqualTo(count2);
     }
+
     @Order(6)
     @Transactional
     @Test
@@ -261,6 +262,7 @@ class MeetingRepositoryTest {
     //@Order(12)
     //@Test
     void 모임글_검색_필터링적용(){
+
         //나중에
     }
     //
