@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -113,9 +115,26 @@ class MeetingRepositoryTest {
                 .status(0)
                 .views(0)
                 .build();
+        /*Meeting meeting4 = Meeting.builder()
+            .title("안녕하세요테스트입니다.")
+            .user(user2)
+            .description("내용입니다.")
+            .applicationCount(0)
+            .category(3)
+            .applicationDeadline(Date.valueOf("2030-12-12"))
+            .recruitmentCount(10)
+            .location("서울특별시")
+            .creationDate(Date.valueOf("2020-12-12"))
+            .interestLanguage("_2_")
+            .interestFramework("_2_")
+            .interestJob("_2_")
+            .status(0)
+            .views(0)
+            .build();*/
         meetingRepository.save(meeting1);
         meetingRepository.save(meeting2);
         meetingRepository.save(meeting3);
+        // meetingRepository.save(meeting4);
     }
 
     @Order(1)
@@ -259,13 +278,38 @@ class MeetingRepositoryTest {
         // then
         assertThat(byTitleLikeAndDeletedIsOrderByCreationDateDesc.size()).isEqualTo(2);
     }
-    //@Order(12)
-    //@Test
+    @Order(12)
+    @Test
     void 모임글_검색_필터링적용(){
+        // Given
+        String searchWord = "테스트";
+        int deleted = 0;
+        List<Integer> categoryList = Arrays.asList(1,3);
+        String searchLanguage = "_0_";
+        String searchFramework = "_0_2_";
+        String searchJob = "_0_2_";
 
-        //나중에
+        // When
+        List<String> searchLanguages = Arrays.asList(searchLanguage.split("_"));
+        List<String> searchFrameworks = Arrays.asList(searchFramework.split("_"));
+        List<String> searchJobs = Arrays.asList(searchJob.split("_"));
+
+        List<Meeting> meetings = new ArrayList<>();
+
+        for (String lang : searchLanguages) {
+            for (String fw : searchFrameworks) {
+                for (String job : searchJobs) {
+                    /*meetings.addAll(meetingRepository.findByTitleLikeAndDeletedAndCategoryInAndInterestLanguageContainingAndInterestFrameworkContainingAndInterestJobContainingOrderByCreationDateDesc(
+                        "%"+searchWord+"%", deleted, categoryList, lang, fw, job));*/
+                    meetings.addAll(meetingRepository.findBySearchFilter(searchWord, deleted, categoryList, lang, fw, job));
+                }
+            }
+        }
+
+        // Then
+        assertThat(meetings).isNotEmpty();
     }
-    //
+
     @Order(13)
     @Test
     void 마이페이지_내가_작성한_글목록_조회(){
