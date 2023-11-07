@@ -2,7 +2,6 @@ package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Meeting;
 import com.threestar.selectstar.domain.entity.User;
-
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
@@ -166,6 +165,11 @@ class MeetingRepositoryTest {
     @Test
     void 삭제_안된_카테고리_미팅(){
         //given before
+        List<Meeting> all = meetingRepository.findAll();
+        for (Object ele:
+             all) {
+            System.out.println(ele);
+        }
         //when
         List<Meeting> byDeletedIsAndCategoryIs = meetingRepository.findByDeletedIsAndCategoryIsOrderByCreationDateDesc(0, 0);
         List<Meeting> byDeletedIsAndCategoryIs1 = meetingRepository.findByDeletedIsAndCategoryIsOrderByCreationDateDesc(0, 1);
@@ -190,17 +194,18 @@ class MeetingRepositoryTest {
     }
     @Order(5)
     @Test
-    void 조회수_1올리기(){
+    void 조회수_1올리기() {
         // given before
         // when
-        Meeting meeting = meetingRepository.findAll().get(0);
+        Meeting meeting = meetingRepository.findAll().get(1);
         Integer count1 = meeting.getViews();
-        meeting.setViews(meeting.getViews()+1);
+        meeting.setViews(meeting.getViews() + 1);
         meetingRepository.save(meeting);
         Integer count2 = meetingRepository.findById(meeting.getMeetingId()).get().getViews();
         // then
         assertThat(count1).isNotEqualTo(count2);
     }
+
     @Order(6)
     @Transactional
     @Test
