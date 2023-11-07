@@ -8,12 +8,14 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.Objects;
 
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @Entity
-@Table(name = "user_table") //h2 테스트 용도
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Table(name = "users") //h2는 user가 예약어
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,22 +48,5 @@ public class User {
         int result = Objects.hash(userId, name, password, email, nickname, location1, location2, joinDate, aboutMe, profileContent, interestLanguage, interestFramework, interestJob);
         result = 31 * result + Arrays.hashCode(profilePhoto);
         return result;
-    }
-
-    @Builder
-    public User(String name, String password, String email, String nickname, String location1, String location2, Date joinDate, byte[] profilePhoto, String aboutMe, String profileContent, String interestLanguage, String interestFramework, String interestJob) {
-        this.name = name;
-        this.password = password;
-        this.email = email;
-        this.nickname = nickname;
-        this.location1 = location1;
-        this.location2 = location2;
-        this.joinDate = joinDate;
-        this.profilePhoto = profilePhoto;
-        this.aboutMe = aboutMe;
-        this.profileContent = profileContent;
-        this.interestLanguage = interestLanguage;
-        this.interestFramework = interestFramework;
-        this.interestJob = interestJob;
     }
 }

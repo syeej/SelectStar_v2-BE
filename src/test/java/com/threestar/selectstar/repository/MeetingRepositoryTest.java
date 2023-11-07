@@ -2,6 +2,7 @@ package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Meeting;
 import com.threestar.selectstar.domain.entity.User;
+import com.threestar.selectstar.dto.MeetingDTO;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
