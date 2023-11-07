@@ -37,19 +37,19 @@ class UserRepositoryTest {
         // given
         User user1 = User.builder()
 
-                .aboutMe("gd")
-                .email("starc13@naver.com")
-                .interestFramework("_0_")
-                .interestJob("_0_")
-                .interestLanguage("_0_")
-                .joinDate(Date.valueOf(LocalDate.now()))
-                .location1("서울특별시")
-                .location2("광주광역시")
-                .name("sungsu")
-                .nickname("성수닉")
-                .password("12345")
-                .profileContent("ㅎㅇㅎㅇㅎㅇㅎ")
-                .build();
+            .aboutMe("gd")
+            .email("starc13@naver.com")
+            .interestFramework("_0_")
+            .interestJob("_0_")
+            .interestLanguage("_0_")
+            .joinDate(Date.valueOf(LocalDate.now()))
+            .location1("서울특별시")
+            .location2("광주광역시")
+            .name("sungsu")
+            .nickname("성수닉")
+            .password("12345")
+            .profileContent("ㅎㅇㅎㅇㅎㅇㅎ")
+            .build();
         userRepository.save(user1);
         //when
         User user2 = userRepository.findById(1).get();
@@ -63,16 +63,16 @@ class UserRepositoryTest {
     void 회원가입_테스트(){
         //Given
         User insertUser = User.builder()
-                .name("testid")
-                .password("qwer1234")
-                .email("test@gmail.com")
-                .nickname("test")
-                .location1("경기도")
-                .joinDate(Date.valueOf(LocalDate.now()))
-                .interestLanguage("")
-                .interestJob("_4_")
-                .interestFramework("_2_")
-                .build();
+            .name("testid")
+            .password("qwer1234")
+            .email("test@gmail.com")
+            .nickname("test")
+            .location1("경기도")
+            .joinDate(Date.valueOf(LocalDate.now()))
+            .interestLanguage("")
+            .interestJob("_4_")
+            .interestFramework("_2_")
+            .build();
 
         // When
         userRepository.save(insertUser);
@@ -90,16 +90,16 @@ class UserRepositoryTest {
         String name = "testid";
         String password = "qwer1234";
         User insertUser = User.builder()
-                .name("testid")
-                .password("qwer1234")
-                .email("test@gmail.com")
-                .nickname("test")
-                .location1("경기도")
-                .joinDate(Date.valueOf(LocalDate.now()))
-                .interestLanguage("")
-                .interestJob("_4_")
-                .interestFramework("_2_")
-                .build();
+            .name("testid")
+            .password("qwer1234")
+            .email("test@gmail.com")
+            .nickname("test")
+            .location1("경기도")
+            .joinDate(Date.valueOf(LocalDate.now()))
+            .interestLanguage("")
+            .interestJob("_4_")
+            .interestFramework("_2_")
+            .build();
         userRepository.save(insertUser);
 
         // When
@@ -116,28 +116,28 @@ class UserRepositoryTest {
         // Given
         String searchNickname = "test";
         User insertUser1 = User.builder()
-                .name("testid")
-                .password("qwer1234")
-                .email("test@gmail.com")
-                .nickname("test")
-                .location1("경기도")
-                .joinDate(Date.valueOf(LocalDate.now()))
-                .interestLanguage("")
-                .interestJob("_4_")
-                .interestFramework("_2_")
-                .build();
+            .name("testid")
+            .password("qwer1234")
+            .email("test@gmail.com")
+            .nickname("test")
+            .location1("경기도")
+            .joinDate(Date.valueOf(LocalDate.now()))
+            .interestLanguage("")
+            .interestJob("_4_")
+            .interestFramework("_2_")
+            .build();
         userRepository.save(insertUser1);
         User insertUser2 = User.builder()
-                .name("idtestid")
-                .password("qwer1234")
-                .email("test@gmail.com")
-                .nickname("test")
-                .location1("경기도")
-                .joinDate(Date.valueOf(LocalDate.now()))
-                .interestLanguage("")
-                .interestJob("_4_")
-                .interestFramework("_2_")
-                .build();
+            .name("idtestid")
+            .password("qwer1234")
+            .email("test@gmail.com")
+            .nickname("test")
+            .location1("경기도")
+            .joinDate(Date.valueOf(LocalDate.now()))
+            .interestLanguage("")
+            .interestJob("_4_")
+            .interestFramework("_2_")
+            .build();
         userRepository.save(insertUser2);
 
         // When
@@ -147,10 +147,8 @@ class UserRepositoryTest {
         assertThat(searchResultByNickname.size()).isGreaterThan(0); // 검색 결과가 존재하는지 확인
         assertThat(searchResultByNickname.get(0).getNickname()).isEqualTo("test"); // 닉네임이 일치하는지 확인
     }
-
     //마이페이지 - 이력관리, 개인정보 조회
     //마이페이지 - 이력관리 수정
     //마이페이지 - 개인정보 수정
-    
 
 }
