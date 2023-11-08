@@ -1,6 +1,7 @@
 package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Meeting;
+import com.threestar.selectstar.dto.MeetingDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

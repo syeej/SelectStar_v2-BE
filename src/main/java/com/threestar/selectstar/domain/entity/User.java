@@ -12,8 +12,10 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_table")
+@Builder
+@Table(name = "users") //h2는 user가 예약어
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,23 +49,4 @@ public class User {
         result = 31 * result + Arrays.hashCode(profilePhoto);
         return result;
     }
-
-    @Builder
-    public User(String name, String password, String email, String nickname, String location1, String location2, Date joinDate, byte[] profilePhoto, String aboutMe, String profileContent, String interestLanguage, String interestFramework, String interestJob) {
-        this.name = name;
-        this.password = password;
-        this.email = email;
-        this.nickname = nickname;
-        this.location1 = location1;
-        this.location2 = location2;
-        this.joinDate = joinDate;
-        this.profilePhoto = profilePhoto;
-        this.aboutMe = aboutMe;
-        this.profileContent = profileContent;
-        this.interestLanguage = interestLanguage;
-        this.interestFramework = interestFramework;
-        this.interestJob = interestJob;
-
-    }
-
 }
