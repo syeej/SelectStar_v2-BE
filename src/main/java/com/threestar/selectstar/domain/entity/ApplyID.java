@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 @Embeddable
 public class ApplyID implements Serializable {
-    //@Column(name="userId")
+    @Column(name = "user_id")
     private Integer userId;
 
-    //@Column(name = "meetingId")
+    @Column(name = "meeting_id")
     private Integer meetingId;
 }

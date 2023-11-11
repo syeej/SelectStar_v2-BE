@@ -17,11 +17,12 @@ public class Apply {
     private ApplyID applyID;
 
     @ManyToOne
-    @JoinColumn(name="userId", insertable = false, updatable = false)
+
+    @JoinColumn(name="user_id",insertable = false, updatable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "meeingId", insertable = false, updatable = false)
+    @JoinColumn(name="meeting_id", insertable = false, updatable = false)
     private Meeting meeting;
 
     private String emailAddress;

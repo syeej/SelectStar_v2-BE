@@ -6,4 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApplyRepository extends JpaRepository<Apply, Integer> {
+    // 신청
+
+    // 신청 했는지 조회
+
+    //
+
 }

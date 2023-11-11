@@ -15,12 +15,13 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name="user_id")
     private User user;
     @ManyToOne
-    @JoinColumn(name="meetingId")
+    @JoinColumn(name="meeting_id")
     private Meeting meeting;
     private String content;
+    private int deleted; // 0:삭제X 1:삭제
     @CreationTimestamp
     private java.sql.Date creationDate;
 }
