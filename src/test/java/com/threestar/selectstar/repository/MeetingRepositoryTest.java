@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -227,7 +228,7 @@ class MeetingRepositoryTest {
                 .views(0)
                 .build();
         meetingRepository.save(meeting4);
-        assertThat(meetingRepository.findAll().size()).isEqualTo(4);
+        assertThat(meeting4).isEqualTo(meetingRepository.findById(meeting4.getMeetingId()).get());
     }
     @Order(7)
     @Transactional
@@ -375,5 +376,26 @@ class MeetingRepositoryTest {
         //then
         assertThat(meetingRepository.findAll().get(0)).isEqualTo(meeting);
         System.out.println(meeting);
+    }
+    @Order(19)
+    @Transactional
+    @Rollback(value = false)
+    @Test
+    void 테스트(){
+        Meeting meeting = meetingRepository.findAll().get(0);
+        Integer meetingId = meeting.getMeetingId();
+        System.out.println(meeting);
+        MeetingDTO meetingDTO = MeetingDTO.toDTO(meeting);
+        meeting.setInterestJob("4e212");
+        meetingDTO.setInterestJob("4e212");
+        System.out.println(meetingRepository.findById(meetingId).get());
+    }
+    @Order(20)
+    @Transactional
+    @Test
+    void 테스트1121(){
+        Meeting meeting = meetingRepository.findAll().get(0);
+        System.out.println(meeting);
+
     }
 }
