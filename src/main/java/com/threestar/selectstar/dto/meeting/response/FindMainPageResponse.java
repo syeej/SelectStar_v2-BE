@@ -2,19 +2,15 @@ package com.threestar.selectstar.dto.meeting.response;
 
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import com.threestar.selectstar.domain.entity.User;
-import com.threestar.selectstar.repository.MeetingRepository;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Date;
-import java.util.Optional;
 
 @Getter
 @Builder
 @ToString
 @AllArgsConstructor
-public class GetMainPageResponse {
+public class FindMainPageResponse {
     private Integer meetingId;
     private String userNickname;
     private String title;
@@ -30,8 +26,8 @@ public class GetMainPageResponse {
     private String interestFramework;
     private String interestJob;
 
-    public static GetMainPageResponse fromEntity(Meeting meeting, String nickname){
-        return GetMainPageResponse.builder()
+    public static FindMainPageResponse fromEntity(Meeting meeting, String nickname){
+        return FindMainPageResponse.builder()
                 .meetingId(meeting.getMeetingId())
                 .userNickname(nickname)
                 .title(meeting.getTitle())

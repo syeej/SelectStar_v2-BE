@@ -1,12 +1,16 @@
 package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.domain.service.MeetingService;
-import com.threestar.selectstar.dto.meeting.request.AddMeetingRequest;
+import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
+import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
+import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
-import com.threestar.selectstar.dto.meeting.response.GetMainPageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin(originPatterns = {"http://localhost:8080","http://localhost:63342"})
 @RestController
@@ -19,55 +23,38 @@ public class MeetingController {
         this.meetingService = meetingService;
     }
 
+    // 전체 조회(페이징)
     @GetMapping
-    public ResponseEntity<?> meetingList(@RequestParam(value = "page",required = false, defaultValue = "0") Integer page, @RequestParam(value = "size",required = false,defaultValue = "10") Integer size, @RequestParam(value = "order",required = false,defaultValue = "desc") String desc,  @RequestParam(value = "category",required = false,defaultValue = "") String category){
-        // 정렬 => 페이징 사용
-        Page<GetMainPageResponse> mainPage = meetingService.findMainPage(page, size);
-
+    public ResponseEntity<Page<FindMainPageResponse>> meetingList(FindMainPageRequest findMainPageRequest){
         return ResponseEntity.ok()
-                .body(mainPage);
+                .body(meetingService.findMainPage(findMainPageRequest));
     }
+    // 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<?> meetingDetail(@PathVariable("id") int id){
-        FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
+    public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") int id){
         return ResponseEntity.ok()
-                .body(meetingOne);
+                .body(meetingService.findMeetingOne(id));
     }
+    // 등록
     @PostMapping
-    public ResponseEntity<?> meetingAdd(@RequestBody AddMeetingRequest addMeetingRequest){
-        System.out.println(addMeetingRequest);
-        String msg = "";
-        if (meetingService.addMeeting(addMeetingRequest)){
-            msg = "등록 성공";
-        } else {
-            msg = "둥록 실패";
-        }
-        return ResponseEntity.ok()
-                .body(msg);
+    public Map<String,String> meetingAdd(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest){
+        Map<String, String> succesMap = new HashMap<>();
+        succesMap.put("result",meetingService.addMeeting(addUpdateMeetingRequest));
+        return succesMap;
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<?> meetingModify(@PathVariable("id") int id, @RequestBody AddMeetingRequest addMeetingRequest){
-        String msg = "";
-        addMeetingRequest.setMeetingId(id);
-        if (meetingService.updateMeeting(addMeetingRequest)){
-            msg = "수정 성공";
-        } else {
-            msg = "수정 실패";
-        }
-        return ResponseEntity.ok()
-                .body(msg);
+    // 수정 => AddUpdateMeetingRequest 변경 불가능 한 값 생각 해야 됨...
+    @PutMapping
+    public Map<String,String> meetingModify(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest){
+        Map<String, String> succesMap = new HashMap<>();
+        succesMap.put("result",meetingService.updateMeeting(addUpdateMeetingRequest));
+        return succesMap;
     }
+    // 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> meetingRemove(@PathVariable("id") int id){
-        String msg = "";
-        if (meetingService.removeMeeting(id)){
-            msg = "삭제 성공";
-        } else {
-            msg = "삭제 실패";
-        }
-        return ResponseEntity.ok()
-                .body(msg);
+    public Map<String,String> meetingRemove(@PathVariable("id") int id){
+        Map<String, String> succesMap = new HashMap<>();
+        succesMap.put("result",meetingService.removeMeeting(id));
+        return succesMap;
     }
-
 
 }
