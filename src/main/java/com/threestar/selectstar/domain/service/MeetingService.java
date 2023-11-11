@@ -1,9 +1,7 @@
 package com.threestar.selectstar.domain.service;
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import com.threestar.selectstar.dto.MeetingDTO;
 import com.threestar.selectstar.dto.meeting.request.AddMeetingRequest;
-import com.threestar.selectstar.dto.meeting.request.RemoveMeetingRequest.RemoveMeetingRequest;
 import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
 import com.threestar.selectstar.dto.meeting.response.GetMainPageResponse;
 import com.threestar.selectstar.repository.ApplyRepository;
@@ -13,15 +11,8 @@ import com.threestar.selectstar.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MeetingService {

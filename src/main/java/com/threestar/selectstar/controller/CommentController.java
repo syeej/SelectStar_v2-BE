@@ -10,20 +10,18 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(originPatterns = {"http://localhost:8080","http://localhost:63342"})
 @RestController
-@RequestMapping("/meeting")
-public class MeetingController {
+@RequestMapping("/comment")
+public class CommentController {
     final
     MeetingService meetingService;
 
-    public MeetingController(MeetingService meetingService) {
+    public CommentController(MeetingService meetingService) {
         this.meetingService = meetingService;
     }
 
     @GetMapping
     public ResponseEntity<?> meetingList(@RequestParam(value = "page",required = false, defaultValue = "0") Integer page, @RequestParam(value = "size",required = false,defaultValue = "10") Integer size, @RequestParam(value = "order",required = false,defaultValue = "desc") String desc,  @RequestParam(value = "category",required = false,defaultValue = "") String category){
-        // 정렬 => 페이징 사용
         Page<GetMainPageResponse> mainPage = meetingService.findMainPage(page, size);
-
         return ResponseEntity.ok()
                 .body(mainPage);
     }
