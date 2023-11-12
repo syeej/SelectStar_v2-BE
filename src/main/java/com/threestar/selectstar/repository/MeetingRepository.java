@@ -1,7 +1,6 @@
 package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import com.threestar.selectstar.dto.MeetingDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,11 +15,11 @@ import java.util.List;
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting,Integer> {
     // 삭제 안 된 전체 게시물 리스트 조회
-    Page<Meeting> findByDeletedIsOrderByCreationDateDesc(int isDelete, Pageable pageable);
+    Page<Meeting> findByDeletedIs(int isDelete, Pageable pageable);
     //삭제 안 된 전체 게시물 수 조회
     Integer countByDeleted(int isDelete);
     // 카테고리가 지정된 삭제 안 된 게시글
-    List<Meeting> findByDeletedIsAndCategoryIsOrderByCreationDateDesc(int deleted, int category);
+    Page<Meeting> findByDeletedIsAndCategoryIs(int deleted, int category, Pageable pageable);
     // 카테고리가 지정된 삭제 안 된 게시글 수
     Integer countByDeletedAndCategoryIsOrderByViewsDesc(int deleted, int category);
     // 메인 - 인기글 조회 (RANK) : 최근 일주일간 올라온 글 중에서 조회수 높은 것 10개

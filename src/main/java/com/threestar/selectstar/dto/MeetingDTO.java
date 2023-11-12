@@ -2,12 +2,7 @@ package com.threestar.selectstar.dto;
 
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import com.threestar.selectstar.domain.entity.User;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
 
@@ -35,10 +30,10 @@ public class MeetingDTO {
     private int deleted;
 
 
-    public static MeetingDTO fromEntity(Meeting meeting) {
+    public static MeetingDTO toDTO(Meeting meeting) {
         return MeetingDTO.builder()
                 .meetingId(meeting.getMeetingId())
-                .user(UserDTO.fromEntity(meeting.getUser())) // UserDto로 변환
+                .user(UserDTO.toDTO(meeting.getUser())) // UserDto로 변환
                 .title(meeting.getTitle())
                 .category(meeting.getCategory())
                 .status(meeting.getStatus())
@@ -56,8 +51,9 @@ public class MeetingDTO {
                 .build();
     }
 
-    public Meeting toEntity(MeetingDTO meetingDTO) {
+    public static Meeting toEntity(MeetingDTO meetingDTO) {
         return Meeting.builder()
+                .meetingId(meetingDTO.getMeetingId())
                 .user(UserDTO.toEntity(meetingDTO.getUser())) // User 엔터티로 변환
                 .title(meetingDTO.getTitle())
                 .category(meetingDTO.getCategory())
@@ -75,7 +71,6 @@ public class MeetingDTO {
                 .deleted(meetingDTO.getDeleted())
                 .build();
     }
-
 }
 
 
