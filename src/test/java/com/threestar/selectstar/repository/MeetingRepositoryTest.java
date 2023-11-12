@@ -117,26 +117,9 @@ class MeetingRepositoryTest {
                 .status(0)
                 .views(0)
                 .build();
-        /*Meeting meeting4 = Meeting.builder()
-            .title("안녕하세요테스트입니다.")
-            .user(user2)
-            .description("내용입니다.")
-            .applicationCount(0)
-            .category(3)
-            .applicationDeadline(Date.valueOf("2030-12-12"))
-            .recruitmentCount(10)
-            .location("서울특별시")
-            .creationDate(Date.valueOf("2020-12-12"))
-            .interestLanguage("_2_")
-            .interestFramework("_2_")
-            .interestJob("_2_")
-            .status(0)
-            .views(0)
-            .build();*/
         meetingRepository.save(meeting1);
         meetingRepository.save(meeting2);
         meetingRepository.save(meeting3);
-        // meetingRepository.save(meeting4);
     }
 
     @Order(1)

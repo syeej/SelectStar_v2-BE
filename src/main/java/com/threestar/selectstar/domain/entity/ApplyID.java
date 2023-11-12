@@ -1,16 +1,24 @@
 package com.threestar.selectstar.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 @Embeddable
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ApplyID implements Serializable {
-    @Column(name = "user_id")
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="userId")
+    private User user;
 
-    @Column(name = "meeting_id")
-    private Integer meetingId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meetingId")
+    private Meeting meeting;
 }

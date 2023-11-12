@@ -1,27 +1,27 @@
 package com.threestar.selectstar.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
 @ToString
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="userId")
     private User user;
     @ManyToOne
-    @JoinColumn(name="meeting_id")
+    @JoinColumn(name="meetingId")
     private Meeting meeting;
     private String content;
-    private int deleted; // 0:삭제X 1:삭제
     @CreationTimestamp
     private java.sql.Date creationDate;
 }

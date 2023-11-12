@@ -50,6 +50,10 @@ public class AddUpdateMeetingRequest {
                 .interestJob(addUpdateMeetingRequest.getInterestJob())
                 .build();
     }
+
+    public void meetingRequestUpdate(AddUpdateMeetingRequest add, User user) {
+        this.meetingId = add.getMeetingId();
+    }
 }
 
 
