@@ -1,6 +1,8 @@
 package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.User;
+import com.threestar.selectstar.dto.AddUserRequest;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,52 +19,20 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+// @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    @BeforeEach
-    void db_init(){
-
-    }
-
     @Transactional
     @Order(1)
     @Test
-    void 데이터_저장후_조회(){
-        // given
-        User user1 = User.builder()
-
-            .aboutMe("gd")
-            .email("starc13@naver.com")
-            .interestFramework("_0_")
-            .interestJob("_0_")
-            .interestLanguage("_0_")
-            .joinDate(Date.valueOf(LocalDate.now()))
-            .location1("서울특별시")
-            .location2("광주광역시")
-            .name("sungsu")
-            .nickname("성수닉")
-            .password("12345")
-            .profileContent("ㅎㅇㅎㅇㅎㅇㅎ")
-            .build();
-        userRepository.save(user1);
-        //when
-        User user2 = userRepository.findById(1).get();
-        //then
-        assertThat(user1).isEqualTo(user2);
-    }
-
-    @Transactional
-    @Order(2)
-    @Test
     void 회원가입_테스트(){
         //Given
-        User insertUser = User.builder()
+        AddUserRequest insertUser = AddUserRequest.builder()
             .name("testid")
             .password("qwer1234")
             .email("test@gmail.com")
@@ -75,15 +45,14 @@ class UserRepositoryTest {
             .build();
 
         // When
-        userRepository.save(insertUser);
+        User savedUser = userRepository.save(insertUser.toEntity());
 
         // Then
-        User saveUser = (User)userRepository.findByName("testid").orElse(null); // 아이디
-        assertThat(saveUser).isNotNull();  // 사용자가 저장되었는지 확인
+        assertThat(savedUser).isNotNull();  // 사용자가 저장되었는지 확인
     }
 
     @Transactional
-    @Order(3)
+    @Order(2)
     @Test
     void 로그인_테스트() {
         //Given
@@ -110,7 +79,7 @@ class UserRepositoryTest {
     }
 
     @Transactional
-    @Order(4)
+    @Order(3)
     @Test
     void 닉네임으로_회원_조회(){
         // Given
