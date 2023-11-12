@@ -64,16 +64,13 @@ public class MeetingService {
             byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
                     findMainPageRequest.getCategory(),
                     pageable);
-
-        return byDeletedIsOrderByCreationDateDesc.map(meeting -> FindMainPageResponse.fromEntity(meeting,
-                meeting.getUser().getNickname()));
+        return byDeletedIsOrderByCreationDateDesc.map(FindMainPageResponse::fromEntity);
     }
     public FindMeetingOneResponse findMeetingOne(int meetingId){
         return meetingRepository.findById(meetingId).
                 map(meeting -> FindMeetingOneResponse.fromEntity(meeting, meeting.getUser().getNickname()))
                 .orElse(null);
     }
-
 
     @Transactional
     public String addMeeting(AddUpdateMeetingRequest addUpdateMeetingRequest){

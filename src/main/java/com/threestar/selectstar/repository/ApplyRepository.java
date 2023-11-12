@@ -13,11 +13,7 @@ public interface ApplyRepository extends JpaRepository<Apply, ApplyID> {
 
     List<Apply> findByApplyID_User_UserIdIs(Integer user_userId);
 
-    Apply findByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(Integer applyID_user_userId, Integer applyID_meeting_meetingId);
-    // 신청
+    boolean existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(Integer applyID_user_userId, Integer applyID_meeting_meetingId);
 
-    // 신청 했는지 조회
-
-    //
 
 }

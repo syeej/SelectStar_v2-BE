@@ -2,14 +2,11 @@ package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Apply;
 import com.threestar.selectstar.domain.entity.ApplyID;
-import com.threestar.selectstar.domain.entity.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -44,7 +41,7 @@ class ApplyRepositoryTest {
     @Test
     @DisplayName("글 신청 여부 조회")
     void check(){
-        Apply byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs = applyRepository.findByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(1, 8);
+        boolean byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs = applyRepository.existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(1, 8);
         System.out.println(byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs);
     }
     @Test
@@ -58,7 +55,7 @@ class ApplyRepositoryTest {
                 .emailAddress("emailAdd")
                 .build();
         applyRepository.save(build);
-        Apply byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs = applyRepository.findByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(1, 9);
+        boolean byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs = applyRepository.existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(1, 9);
         System.out.println(byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs);
     }
 }
