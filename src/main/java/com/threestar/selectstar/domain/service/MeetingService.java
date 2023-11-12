@@ -1,23 +1,20 @@
 package com.threestar.selectstar.domain.service;
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import com.threestar.selectstar.dto.MeetingDTO;
+import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
+import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
+import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
+import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.repository.ApplyRepository;
 import com.threestar.selectstar.repository.CommentRepository;
 import com.threestar.selectstar.repository.MeetingRepository;
 import com.threestar.selectstar.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.util.Pair;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MeetingService {
@@ -36,21 +33,77 @@ public class MeetingService {
     }
 
     // 미팅 페이지를 조회한다.
-    public Pair<Integer, List<MeetingDTO>> GetPageMeetingDTO(int pageNum, int size) {
+    public Page<FindMainPageResponse> findMainPage(FindMainPageRequest findMainPageRequest) {
         // 총 페이지 랑 페이지 리스트 반환
-        Pageable pageable = PageRequest.of(pageNum, size);
-        Page<Meeting> byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsOrderByCreationDateDesc(0, pageable);
-        List<MeetingDTO> meetingDTOList = new ArrayList<>();
-        List<Meeting> content = byDeletedIsOrderByCreationDateDesc.getContent();
-        for (Meeting meeting :
-                content) {
-            meetingDTOList.add(MeetingDTO.fromEntity(meeting));
+        Pageable pageable;
+        // 페이징 처리
+        if (findMainPageRequest.getOrder() != null) {
+            pageable = switch (findMainPageRequest.getOrder()) {
+                case "desc" -> PageRequest.of(findMainPageRequest.getPage(),
+                        findMainPageRequest.getSize(),
+                        Sort.by(Sort.Direction.DESC,
+                                findMainPageRequest.getCriteria()));
+                case "asc" -> PageRequest.of(findMainPageRequest.getPage(),
+                        findMainPageRequest.getSize(),
+                        Sort.by(Sort.Direction.ASC,
+                                findMainPageRequest.getCriteria()));
+                default -> PageRequest.of(findMainPageRequest.getPage(),
+                        findMainPageRequest.getSize());
+            };
+        } else {
+            pageable = PageRequest.of(findMainPageRequest.getPage(),
+                findMainPageRequest.getSize());
         }
-        return Pair.of(byDeletedIsOrderByCreationDateDesc.getTotalPages(), meetingDTOList);
+        Page<Meeting> byDeletedIsOrderByCreationDateDesc;
+        if (findMainPageRequest.getCategory() == null)
+            byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIs(0,
+                    pageable);
+        else
+            byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
+                    findMainPageRequest.getCategory(),
+                    pageable);
+
+        return byDeletedIsOrderByCreationDateDesc.map(meeting -> FindMainPageResponse.fromEntity(meeting,
+                meeting.getUser().getNickname()));
+    }
+    public FindMeetingOneResponse findMeetingOne(int meetingId){
+        return meetingRepository.findById(meetingId).
+                map(meeting -> FindMeetingOneResponse.fromEntity(meeting, meeting.getUser().getNickname()))
+                .orElse(null);
+    }
+
+
+    @Transactional
+    public String addMeeting(AddUpdateMeetingRequest addUpdateMeetingRequest){
+        try {
+            meetingRepository.save(AddUpdateMeetingRequest.toEntity
+                    (addUpdateMeetingRequest,userRepository.findById
+                            (addUpdateMeetingRequest.getUserId()).get()));
+            return "success";
+        } catch (Exception e){
+            System.out.println(e);
+            return e.getMessage();
+        }
+    }
+    @Transactional
+    public String updateMeeting(AddUpdateMeetingRequest addUpdateMeetingRequest){
+        try {
+            meetingRepository.save(AddUpdateMeetingRequest.toEntity(
+                    addUpdateMeetingRequest,userRepository.findById(
+                            addUpdateMeetingRequest.getUserId()).get()));
+            return "success";
+        } catch (Exception e){
+            return e.getMessage();
+        }
+    }
+    @Transactional
+    public String removeMeeting(int  id){
+        try {
+            meetingRepository.deleteById(id);
+            return "success";
+        } catch (Exception e){
+            return e.getMessage();
+        }
     }
 }
 
-//    public List<MeetingDTO> getMeetingAll(){
-//        List<Meeting> meetingList = meetingRepository.findAll();
-//        meetingList.stream().map(MeetingDTO::fromEntity).collect(Collectors.toList());
-//

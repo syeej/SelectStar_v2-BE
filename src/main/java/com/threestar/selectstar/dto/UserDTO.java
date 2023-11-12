@@ -1,6 +1,5 @@
 package com.threestar.selectstar.dto;
 
-import com.threestar.selectstar.domain.entity.Meeting;
 import com.threestar.selectstar.domain.entity.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,13 +27,13 @@ public class UserDTO {
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
-    public static UserDTO fromEntity(User user) {
+    public static UserDTO toDTO(User user) {
         return UserDTO.builder()
                 .userId(user.getUserId())
                 .name(user.getName())
                 .password(user.getPassword())
                 .email(user.getEmail())
-                .nickname(user.getEmail())
+                .nickname(user.getNickname())
                 .location1(user.getLocation1())
                 .location2(user.getLocation2())
                 .joinDate(user.getJoinDate())
@@ -53,7 +51,7 @@ public class UserDTO {
                 .name(userDTO.getName())
                 .password(userDTO.getPassword())
                 .email(userDTO.getEmail())
-                .nickname(userDTO.getEmail())
+                .nickname(userDTO.getNickname())
                 .location1(userDTO.getLocation1())
                 .location2(userDTO.getLocation2())
                 .joinDate(userDTO.getJoinDate())
