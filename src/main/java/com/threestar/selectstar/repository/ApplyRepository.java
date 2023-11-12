@@ -1,15 +1,19 @@
 package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Apply;
+import com.threestar.selectstar.domain.entity.ApplyID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface ApplyRepository extends JpaRepository<Apply, Integer> {
-    // 신청
+public interface ApplyRepository extends JpaRepository<Apply, ApplyID> {
+    List<Apply> findByApplyID_Meeting_MeetingIdIs(Integer meeting_meetingId);
 
-    // 신청 했는지 조회
+    List<Apply> findByApplyID_User_UserIdIs(Integer user_userId);
 
-    //
+    boolean existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(Integer applyID_user_userId, Integer applyID_meeting_meetingId);
+
 
 }

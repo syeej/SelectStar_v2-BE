@@ -12,6 +12,7 @@ import java.sql.Date;
 @AllArgsConstructor
 public class FindMainPageResponse {
     private Integer meetingId;
+    private Integer userId;
     private String userNickname;
     private String title;
     private int category;
@@ -26,10 +27,11 @@ public class FindMainPageResponse {
     private String interestFramework;
     private String interestJob;
 
-    public static FindMainPageResponse fromEntity(Meeting meeting, String nickname){
+    public static FindMainPageResponse fromEntity(Meeting meeting){
         return FindMainPageResponse.builder()
                 .meetingId(meeting.getMeetingId())
-                .userNickname(nickname)
+                .userId(meeting.getUser().getUserId())
+                .userNickname(meeting.getUser().getNickname())
                 .title(meeting.getTitle())
                 .category(meeting.getCategory())
                 .status(meeting.getStatus())
