@@ -42,7 +42,6 @@ public class User {
         User user = (User) o;
         return Objects.equals(userId, user.userId) && Objects.equals(name, user.name) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(nickname, user.nickname) && Objects.equals(location1, user.location1) && Objects.equals(location2, user.location2) && Arrays.equals(profilePhoto, user.profilePhoto) && Objects.equals(aboutMe, user.aboutMe) && Objects.equals(profileContent, user.profileContent) && Objects.equals(interestLanguage, user.interestLanguage) && Objects.equals(interestFramework, user.interestFramework) && Objects.equals(interestJob, user.interestJob);
     }
-
     @Override
     public int hashCode() {
         int result = Objects.hash(userId, name, password, email, nickname, location1, location2, joinDate, aboutMe, profileContent, interestLanguage, interestFramework, interestJob);
