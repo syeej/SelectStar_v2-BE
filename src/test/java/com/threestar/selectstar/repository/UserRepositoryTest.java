@@ -1,15 +1,12 @@
 package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.User;
-import com.threestar.selectstar.dto.AddUserRequest;
+import com.threestar.selectstar.dto.user.request.AddUserRequest;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;

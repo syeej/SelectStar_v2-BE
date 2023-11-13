@@ -1,4 +1,4 @@
-package com.threestar.selectstar.dto;
+package com.threestar.selectstar.dto.user.request;
 
 import java.sql.Date;
 

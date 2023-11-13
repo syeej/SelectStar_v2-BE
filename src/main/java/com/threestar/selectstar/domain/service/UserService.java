@@ -1,6 +1,5 @@
 package com.threestar.selectstar.domain.service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.threestar.selectstar.domain.entity.User;
-import com.threestar.selectstar.dto.AddUserRequest;
-import com.threestar.selectstar.dto.GetUserRequest;
-import com.threestar.selectstar.dto.GetUsersListResponse;
+import com.threestar.selectstar.dto.user.request.AddUserRequest;
+import com.threestar.selectstar.dto.user.request.GetUserRequest;
+import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
 import com.threestar.selectstar.repository.UserRepository;
 
 @Service

@@ -1,18 +1,15 @@
 package com.threestar.selectstar.domain.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.threestar.selectstar.domain.entity.User;
-import com.threestar.selectstar.dto.AddUserRequest;
+import com.threestar.selectstar.dto.user.request.AddUserRequest;
 import com.threestar.selectstar.repository.UserRepository;
 
 @SpringBootTest

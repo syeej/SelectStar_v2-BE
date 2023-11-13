@@ -1,7 +1,5 @@
 package com.threestar.selectstar.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.threestar.selectstar.domain.service.UserService;
-import com.threestar.selectstar.dto.AddUserRequest;
-import com.threestar.selectstar.dto.GetUserRequest;
+import com.threestar.selectstar.dto.user.request.AddUserRequest;
+import com.threestar.selectstar.dto.user.request.GetUserRequest;
 
 @RestController
 public class UserController {
