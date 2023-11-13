@@ -1,10 +1,9 @@
 package com.threestar.selectstar.repository;
 
 import com.threestar.selectstar.domain.entity.Comment;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.threestar.selectstar.domain.entity.Meeting;
+import com.threestar.selectstar.domain.entity.User;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -12,7 +11,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -25,29 +27,116 @@ class CommentRepositoryTest {
     @Autowired
     CommentRepository commentRepository;
     @Autowired
-    MeetingRepository meetingRepository;
-    @Autowired
     UserRepository userRepository;
-    // 사이트 댓글 조회
-    @Test
-    @DisplayName("사이트 댓글 조회")
-    void findByMeeting_MeetingIdIsAndDeletedIs(){
-        Pageable pageable = PageRequest.of(0,5);
-        List<Comment> all = commentRepository.findAll();
-        for (Object ele:
-             all) {
-            System.out.println(ele);
+    @Autowired
+    MeetingRepository meetingRepository;
+    @BeforeEach
+    @Transactional
+    void db_init() {
+        //given
+        //user
+        // 저장 테스트
+        User user1 = User.builder()
+                .aboutMe("gd")
+                .email("starc13@naver.com")
+                .interestFramework("_0_")
+                .interestJob("_0_")
+                .interestLanguage("_0_")
+                .joinDate(Date.valueOf(LocalDate.now()))
+                .location1("서울특별시")
+                .location2("광주광역시")
+                .name("sungsu")
+                .nickname("성수닉")
+                .password("12345")
+                .profileContent("ㅎㅇㅎㅇㅎㅇㅎ")
+                .build();
+        User user2 = User.builder()
+                .aboutMe("gdㅇㅇㅇ")
+                .email("starc21@naver.com")
+                .interestFramework("_0_")
+                .interestJob("_0_")
+                .interestLanguage("_0_")
+                .joinDate(Date.valueOf(LocalDate.now()))
+                .location1("부산광역시")
+                .location2("광주광역시")
+                .name("minsu")
+                .nickname("민수닉")
+                .password("12345")
+                .profileContent("ㅎㅇㅎㅇㅎㅇㅎ")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        //meeting
+        Meeting meeting1 = Meeting.builder()
+                .title("테스트")
+                .user(user1)
+                .description("내용입니다.")
+                .applicationCount(0)
+                .category(0)
+                .applicationDeadline(Date.valueOf("2030-12-12"))
+                .recruitmentCount(10)
+                .location("서울특별시")
+                .creationDate(Date.valueOf("2020-12-12"))
+                .interestLanguage("_0_")
+                .interestFramework("_0_")
+                .interestJob("_0_")
+                .status(0)
+                .views(0)
+                .build();
+        Meeting meeting2 = Meeting.builder()
+                .title("테스트")
+                .user(user1)
+                .description("내용입니다.")
+                .applicationCount(0)
+                .category(1)
+                .applicationDeadline(Date.valueOf("2030-12-12"))
+                .recruitmentCount(10)
+                .location("서울특별시")
+                .creationDate(Date.valueOf("2020-12-12"))
+                .interestLanguage("_0_")
+                .interestFramework("_0_")
+                .interestJob("_0_")
+                .status(0)
+                .views(0)
+                .build();
+        Meeting meeting3 = Meeting.builder()
+                .title("test")
+                .user(user2)
+                .description("내용입니다.")
+                .applicationCount(0)
+                .category(2)
+                .applicationDeadline(Date.valueOf("2030-12-12"))
+                .recruitmentCount(10)
+                .location("서울특별시")
+                .creationDate(Date.valueOf("2020-12-12"))
+                .interestLanguage("_0_")
+                .interestFramework("_0_")
+                .interestJob("_0_")
+                .status(0)
+                .views(0)
+                .build();
 
-        }
-      Page<Comment> byMeetingMeetingIdIsAndDeletedIs = commentRepository.findByMeeting_MeetingIdIsAndDeletedIs(64, 0, pageable);
-       for (Object ele :
-               byMeetingMeetingIdIsAndDeletedIs) {
-            System.out.println(ele);
- }
+        meetingRepository.save(meeting1);
+        meetingRepository.save(meeting2);
+        meetingRepository.save(meeting3);
+        Comment comment1 = Comment.builder()
+                .content("테스트 댓글입니다.")
+                .user(user1)
+                .meeting(meeting1)
+                .build();
+        commentRepository.save(comment1);
+
     }
-    // 댓글 등록
 
-    // 댓글 삭제
+    @DisplayName("댓글 조회")
+    @Test
+    void find(){
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Comment> byMeetingMeetingIdIs = commentRepository.findByMeeting_MeetingIdIs(25, pageable);
+        for (Object ele:
+             byMeetingMeetingIdIs) {
+            System.out.println(ele);
+        }
+    }
 
-    // 댓글 수정...? 뷰에서 어떻게
 }

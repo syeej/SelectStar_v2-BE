@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class MeetingService {
 
@@ -62,9 +64,7 @@ public class MeetingService {
             byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
                     findMainPageRequest.getCategory(),
                     pageable);
-
-        return byDeletedIsOrderByCreationDateDesc.map(meeting -> FindMainPageResponse.fromEntity(meeting,
-                meeting.getUser().getNickname()));
+        return byDeletedIsOrderByCreationDateDesc.map(FindMainPageResponse::fromEntity);
     }
     public FindMeetingOneResponse findMeetingOne(int meetingId){
         return meetingRepository.findById(meetingId).
@@ -72,13 +72,13 @@ public class MeetingService {
                 .orElse(null);
     }
 
-
     @Transactional
     public String addMeeting(AddUpdateMeetingRequest addUpdateMeetingRequest){
         try {
             meetingRepository.save(AddUpdateMeetingRequest.toEntity
                     (addUpdateMeetingRequest,userRepository.findById
-                            (addUpdateMeetingRequest.getUserId()).get()));
+                            (addUpdateMeetingRequest.getUserId())
+                            .orElseThrow(IllegalArgumentException::new)));
             return "success";
         } catch (Exception e){
             System.out.println(e);
@@ -89,17 +89,20 @@ public class MeetingService {
     public String updateMeeting(AddUpdateMeetingRequest addUpdateMeetingRequest){
         try {
             meetingRepository.save(AddUpdateMeetingRequest.toEntity(
-                    addUpdateMeetingRequest,userRepository.findById(
-                            addUpdateMeetingRequest.getUserId()).get()));
+                    addUpdateMeetingRequest,
+                    userRepository.findById(addUpdateMeetingRequest.getUserId())
+                            .orElseThrow(IllegalArgumentException::new)));
             return "success";
         } catch (Exception e){
             return e.getMessage();
         }
     }
     @Transactional
-    public String removeMeeting(int  id){
+    public String removeMeeting(int id){
         try {
-            meetingRepository.deleteById(id);
+            meetingRepository.findById(id)
+                    .orElseThrow(IllegalArgumentException::new)
+                    .setDeleted(1);
             return "success";
         } catch (Exception e){
             return e.getMessage();
