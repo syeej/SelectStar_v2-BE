@@ -50,6 +50,7 @@ public class AddUpdateMeetingRequest {
                 .interestJob(addUpdateMeetingRequest.getInterestJob())
                 .build();
     }
+    // 업데이트 수정 => https://jojoldu.tistory.com/415
 
     public void meetingRequestUpdate(AddUpdateMeetingRequest add, User user) {
         this.meetingId = add.getMeetingId();

@@ -1,4 +1,4 @@
-package com.threestar.selectstar.dto.apply.requset;
+package com.threestar.selectstar.dto.apply.request;
 
 import com.threestar.selectstar.domain.entity.Apply;
 import com.threestar.selectstar.domain.entity.ApplyID;

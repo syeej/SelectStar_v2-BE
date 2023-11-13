@@ -16,7 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+
 
 @Service
 public class MeetingService {
@@ -81,7 +81,6 @@ public class MeetingService {
                             .orElseThrow(IllegalArgumentException::new)));
             return "success";
         } catch (Exception e){
-            System.out.println(e);
             return e.getMessage();
         }
     }

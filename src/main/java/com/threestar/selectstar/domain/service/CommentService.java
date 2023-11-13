@@ -1,7 +1,8 @@
 package com.threestar.selectstar.domain.service;
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
+import com.threestar.selectstar.dto.comment.request.AddCommentRequest;
+import com.threestar.selectstar.dto.comment.response.FindCommentResponse;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
 import com.threestar.selectstar.repository.ApplyRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -30,45 +32,29 @@ public class CommentService {
         this.applyRepository = applyRepository;
     }
     // 해당 게시글 모든 댓글 조회
-    public Page<FindMainPageResponse> findComment(FindMainPageRequest findMainPageRequest) {
-        // 총 페이지 랑 페이지 리스트 반환
-        Pageable pageable;
-        // 페이징 처리
-        if (findMainPageRequest.getOrder() != null) {
-            pageable = switch (findMainPageRequest.getOrder()) {
-                case "desc" -> PageRequest.of(findMainPageRequest.getPage(),
-                        findMainPageRequest.getSize(),
-                        Sort.by(Sort.Direction.DESC,
-                                findMainPageRequest.getCriteria()));
-                case "asc" -> PageRequest.of(findMainPageRequest.getPage(),
-                        findMainPageRequest.getSize(),
-                        Sort.by(Sort.Direction.ASC,
-                                findMainPageRequest.getCriteria()));
-                default -> PageRequest.of(findMainPageRequest.getPage(),
-                        findMainPageRequest.getSize());
-            };
-        } else {
-            pageable = PageRequest.of(findMainPageRequest.getPage(),
-                    findMainPageRequest.getSize());
-        }
-        Page<Meeting> byDeletedIsOrderByCreationDateDesc;
-        if (findMainPageRequest.getCategory() == null)
-            byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIs(0,
-                    pageable);
-        else
-            byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
-                    findMainPageRequest.getCategory(),
-                    pageable);
-        return byDeletedIsOrderByCreationDateDesc.map(FindMainPageResponse::fromEntity);
+    public Page<FindCommentResponse> findComment(int meetingId, Pageable pageable) {
+        return commentRepository.findByMeeting_MeetingIdIs(meetingId, pageable).map(FindCommentResponse::fromEntity);
     }
-    public FindMeetingOneResponse findMeetingOne(int meetingId){
-        return meetingRepository.findById(meetingId).
-                map(meeting -> FindMeetingOneResponse.fromEntity(meeting, meeting.getUser().getNickname()))
-                .orElse(null);
-    }
-
     // 댓글 등록
-
+    public String addComment(AddCommentRequest addCommentRequest){
+        try {
+            commentRepository.save(AddCommentRequest.toEntity(addCommentRequest,
+                    userRepository.findById(addCommentRequest.getUserId()).orElseThrow(IllegalArgumentException::new),
+                    meetingRepository.findById(addCommentRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new)));
+            return "success";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
     // 댓글 삭제
-
+    public String removeComment(int commentId){
+        try {
+            commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new).setDeleted(0);
+            return "success";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+    
+    // 내가 등록한 모든 댓글
 }
