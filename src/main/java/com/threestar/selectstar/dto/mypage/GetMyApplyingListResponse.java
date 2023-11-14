@@ -1,19 +1,18 @@
-package com.threestar.selectstar.dto.meeting.response;
-
+package com.threestar.selectstar.dto.mypage;
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.sql.Date;
 
-@Getter
 @Builder
 @ToString
-@AllArgsConstructor
-public class FindMainPageResponse {
-    private Integer meetingId;
-    private Integer userId;
-    private String userNickname;
+@Getter
+public class GetMyApplyingListResponse {
+    private int meetingId;
+    //private int userId;
     private String title;
     private int category;
     private int status;
@@ -21,18 +20,16 @@ public class FindMainPageResponse {
     private int views;
     private int recruitmentCount;
     private int applicationCount;
-    private int commentCount;
     private String location;
     private Date creationDate;
-    private String interestLanguage;
-    private String interestFramework;
-    private String interestJob;
+    //private String interestLanguage;
+    //private String interestFramework;
+    //private String interestJob;
 
-    public static FindMainPageResponse fromEntity(Meeting meeting,int commentCount){
-        return FindMainPageResponse.builder()
+    public static GetMyApplyingListResponse fromEntity(Meeting meeting){
+        return GetMyApplyingListResponse.builder()
                 .meetingId(meeting.getMeetingId())
-                .userId(meeting.getUser().getUserId())
-                .userNickname(meeting.getUser().getNickname())
+                //.userId(meeting.getUser().getUserId())
                 .title(meeting.getTitle())
                 .category(meeting.getCategory())
                 .status(meeting.getStatus())
@@ -40,16 +37,8 @@ public class FindMainPageResponse {
                 .views(meeting.getViews())
                 .recruitmentCount(meeting.getRecruitmentCount())
                 .applicationCount(meeting.getApplicationCount())
-                .commentCount(commentCount)
                 .location(meeting.getLocation())
                 .creationDate(meeting.getCreationDate())
-                .interestLanguage(meeting.getInterestLanguage())
-                .interestFramework(meeting.getInterestFramework())
-                .interestJob(meeting.getInterestJob())
                 .build();
     }
 }
-
-
-
-

@@ -24,4 +24,5 @@ public class Comment {
     private String content;
     @CreationTimestamp
     private java.sql.Date creationDate;
+    private int deleted; // 0:삭제X 1:삭제
 }
