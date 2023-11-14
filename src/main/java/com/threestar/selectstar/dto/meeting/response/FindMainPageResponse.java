@@ -45,7 +45,7 @@ public class FindMainPageResponse {
                 .creationDate(meeting.getCreationDate())
                 .interestLanguage(meeting.getInterestLanguage())
                 .interestFramework(meeting.getInterestFramework())
-                .interestLanguage(meeting.getInterestLanguage())
+                .interestJob(meeting.getInterestJob())
                 .build();
     }
 }
