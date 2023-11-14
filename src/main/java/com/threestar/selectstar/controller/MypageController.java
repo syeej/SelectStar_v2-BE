@@ -25,8 +25,6 @@ public class MypageController {
     @Autowired
     private final MypageService mypageService;
 
-    private final MeetingService meetingService;
-
     //마이페이지-이력관리 조회
     @GetMapping("/users/profile/{id}")
     @ResponseBody
@@ -36,7 +34,7 @@ public class MypageController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    //마이페이지-이력관리 수정
+    //마이 페이지-이력 관리 수정
     @PatchMapping("/users/profile/{id}")
     @ResponseBody
     public ResponseEntity<?> updateMyProfile(@PathVariable int id, @RequestBody UpdateMyInfoRequest userReq){

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 @Slf4j
 @Service
 public class MeetingService {
@@ -73,7 +74,8 @@ public class MeetingService {
             byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
                     findMainPageRequest.getCategory(),
                     pageable);
-        return byDeletedIsOrderByCreationDateDesc.map(FindMainPageResponse::fromEntity);
+        return byDeletedIsOrderByCreationDateDesc.map(entity -> FindMainPageResponse.fromEntity(entity,
+                commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId())));
     }
     public FindMeetingOneResponse findMeetingOne(int meetingId){
         return meetingRepository.findById(meetingId).
@@ -90,7 +92,6 @@ public class MeetingService {
                             .orElseThrow(IllegalArgumentException::new)));
             return "success";
         } catch (Exception e){
-            System.out.println(e);
             return e.getMessage();
         }
     }

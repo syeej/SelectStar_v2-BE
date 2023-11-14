@@ -1,8 +1,7 @@
 package com.threestar.selectstar.domain.service;
 
-import com.threestar.selectstar.domain.entity.Apply;
 import com.threestar.selectstar.domain.entity.ApplyID;
-import com.threestar.selectstar.dto.apply.requset.ApplyRequest;
+import com.threestar.selectstar.dto.apply.request.ApplyRequest;
 import com.threestar.selectstar.dto.apply.response.FindApplyByMeetingIdResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByUserIdResponse;
 import com.threestar.selectstar.repository.ApplyRepository;
