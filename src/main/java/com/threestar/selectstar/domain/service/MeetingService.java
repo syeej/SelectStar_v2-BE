@@ -64,7 +64,8 @@ public class MeetingService {
             byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
                     findMainPageRequest.getCategory(),
                     pageable);
-        return byDeletedIsOrderByCreationDateDesc.map(FindMainPageResponse::fromEntity);
+        return byDeletedIsOrderByCreationDateDesc.map(entity -> FindMainPageResponse.fromEntity(entity,
+                commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId())));
     }
     public FindMeetingOneResponse findMeetingOne(int meetingId){
         return meetingRepository.findById(meetingId).

@@ -21,13 +21,14 @@ public class FindMainPageResponse {
     private int views;
     private int recruitmentCount;
     private int applicationCount;
+    private int commentCount;
     private String location;
     private Date creationDate;
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
 
-    public static FindMainPageResponse fromEntity(Meeting meeting){
+    public static FindMainPageResponse fromEntity(Meeting meeting,int commentCount){
         return FindMainPageResponse.builder()
                 .meetingId(meeting.getMeetingId())
                 .userId(meeting.getUser().getUserId())
@@ -39,6 +40,7 @@ public class FindMainPageResponse {
                 .views(meeting.getViews())
                 .recruitmentCount(meeting.getRecruitmentCount())
                 .applicationCount(meeting.getApplicationCount())
+                .commentCount(commentCount)
                 .location(meeting.getLocation())
                 .creationDate(meeting.getCreationDate())
                 .interestLanguage(meeting.getInterestLanguage())
