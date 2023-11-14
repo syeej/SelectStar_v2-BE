@@ -49,4 +49,23 @@ public interface MeetingRepository extends JpaRepository<Meeting,Integer> {
     // 내가 작성한 글목록 조회(카테고리별, 모집상태별)
     List<Meeting> findByUser_UserIdIsAndDeletedIsAndCategoryIsAndStatusIs(Integer user_userId, int deleted, int category, int status);
 
+    //내가 신청한 글 목록
+    @Query("select m, a from Meeting m join Apply a on m.meetingId = a.applyID.meeting.meetingId " +
+            "where a.applyID.user.userId=:uid and m.deleted=:mds")
+    public List<Meeting> getMyApplyingList(@Param("uid") int uid, @Param("mds") int mds);
+
+    // 내가 작성한 글목록 조회(카테고리별)
+    @Query("select m, a from Meeting m join Apply a on m.meetingId = a.applyID.meeting.meetingId " +
+            "where a.applyID.user.userId=:uid and m.deleted=:mds and m.category=:cate")
+    public List<Meeting> getMyApplyingListByCate(@Param("uid") int uid, @Param("mds") int mds, @Param("cate") int cate);
+
+    // 내가 작성한 글목록 조회(모집상태별)
+    @Query("select m, a from Meeting m join Apply a on m.meetingId = a.applyID.meeting.meetingId " +
+            "where a.applyID.user.userId=:uid and m.deleted=:mds and m.status=:sts")
+    public List<Meeting> getMyApplyingListByStatus(@Param("uid") int uid, @Param("mds") int mds, @Param("sts") int sts);
+
+    // 내가 작성한 글목록 조회(카테고리별&모집상태별)
+    @Query("select m, a from Meeting m join Apply a on m.meetingId = a.applyID.meeting.meetingId " +
+            "where a.applyID.user.userId=:uid and m.deleted=:mds and m.category=:cate and m.status=:sts")
+    public List<Meeting> getMyApplyingListByCateAndSts(@Param("uid") int uid, @Param("mds") int mds, @Param("cate") int cate, @Param("sts") int sts);
 }

@@ -2,6 +2,7 @@ package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.domain.service.MeetingService;
 import com.threestar.selectstar.domain.service.MypageService;
+import com.threestar.selectstar.dto.mypage.GetMyApplyingListResponse;
 import com.threestar.selectstar.dto.mypage.GetMyInfoResponse;
 import com.threestar.selectstar.dto.mypage.GetMyMeetingListResponse;
 import com.threestar.selectstar.dto.mypage.UpdateMyInfoRequest;
@@ -95,7 +96,31 @@ public class MypageController {
         }else {
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }
-
+    }
+    //내가 신청한 글 목록 조회
+    @GetMapping("/users/myapplying/{id}")
+    @ResponseBody
+    public ResponseEntity<?> getMyApplyingList(@PathVariable int id){
+        List<GetMyApplyingListResponse> res = meetingService.getMyApplyingList(id);
+        log.info("get applying res >>"+res);
+        if(res == null){
+            throw new MeetingNotFoundException("글이 없습니다.");
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }
     }
 
+    //내가 신청한 글 목록 카테고리별/모집상태별 조회
+    @GetMapping(value = "/users/myapplyingfilter/{id}", produces = "application/json; charset=utf-8")
+    public ResponseEntity<?> getMyApplyingListByFilterr(@PathVariable int id,
+                                                        @RequestParam(name = "category", required = false) String strCategory,
+                                                        @RequestParam(name="status", required = false) String strStatus){
+        List<GetMyApplyingListResponse> res = meetingService.getMyAppyingListByFilter(id, strCategory,strStatus);
+        log.info("get applying filter res >>"+res);
+        if(res == null){
+            throw new MeetingNotFoundException("글이 없습니다.");
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }
+    }
 }
