@@ -36,9 +36,6 @@ public class HomeController {
 		List<GetUsersListResponse> users = userService.searchUser(searchWord);
 		searchResult.add(users);
 
-		if (searchResult.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
 		return ResponseEntity.ok(searchResult);
 	}
 
