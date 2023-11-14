@@ -26,7 +26,6 @@ public class MeetingController {
     // 전체 조회(페이징)
     @GetMapping
     public ResponseEntity<Page<FindMainPageResponse>> meetingList(FindMainPageRequest findMainPageRequest){
-        System.out.println(1);
         return ResponseEntity.ok()
                 .body(meetingService.findMainPage(findMainPageRequest));
     }
