@@ -18,7 +18,7 @@ public class MypageService {
 
     private final UserRepository userRepository;
 
-    //마이페이지 이력관리 조회 요청
+    //마이페이지 이력관리 조회 요청(UserService 이동 예정)
     public GetMyInfoResponse getMyProfileInfo(int id){
         //Optional : NPE(NullPointerException) 방지
         Optional<User> userO = userRepository.findById(id);
@@ -31,12 +31,13 @@ public class MypageService {
                     .name(userE.getName())
                     .aboutMe(userE.getAboutMe())
                     .profileContent(userE.getProfileContent())
+                    .profilePhoto(userE.getProfilePhoto())
                     .build();
             //return new GetMyInfoResponse(userE);
         }
     }
 
-    //마이페이지 이력관리 수정 요청
+    //마이페이지 이력관리 수정 요청(UserService 이동 예정)
     @Transactional
     public String updateMyProfileInfo(int uId, UpdateMyInfoRequest reqDTO){
         Optional<User> userO = userRepository.findById(uId);
@@ -56,7 +57,7 @@ public class MypageService {
         }
     }
 
-    //마이페이지 개인정보 조회 요청
+    //마이페이지 개인정보 조회 요청(UserService 이동 예정)
     public GetMyInfoResponse getMyInfo(int id){
         //Optional : NPE(NullPointerException) 방지
         Optional<User> userO = userRepository.findById(id);
@@ -80,7 +81,7 @@ public class MypageService {
         }
     }
 
-    //마이페이지 개인정보 수정 요청
+    //마이페이지 개인정보 수정 요청(UserService 이동 예정)
     @Transactional
     public String updateMyInfo(int uId, UpdateMyInfoRequest reqDTO){
         Optional<User> userO = userRepository.findById(uId);

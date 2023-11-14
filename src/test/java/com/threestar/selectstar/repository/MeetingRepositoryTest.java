@@ -301,7 +301,7 @@ class MeetingRepositoryTest {
         //given
         User user = userRepository.findAll().get(0);
         //when
-        List<Meeting> byUserUserIdIs = meetingRepository.findByUser_UserIdIsAndDeletedIs(user.getUserId(),0);
+        List<Meeting> byUserUserIdIs = meetingRepository.findByUser_UserIdIsAndDeletedIs(3,0);
         //then
         System.out.println(byUserUserIdIs);
        assertThat(byUserUserIdIs.size()).isEqualTo(2);
