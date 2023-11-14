@@ -1,8 +1,8 @@
 package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.domain.service.MypageService;
-import com.threestar.selectstar.dto.GetMyInfoResponse;
-import com.threestar.selectstar.dto.UpdateMyInfoRequest;
+import com.threestar.selectstar.dto.mypage.GetMyInfoResponse;
+import com.threestar.selectstar.dto.mypage.UpdateMyInfoRequest;
 import com.threestar.selectstar.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
