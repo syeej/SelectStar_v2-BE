@@ -20,7 +20,7 @@ public class MypageService {
 
     //마이페이지 이력관리 조회 요청(UserService 이동 예정)
     public GetMyInfoResponse getMyProfileInfo(int id){
-        //Optional : NPE(NullPointerException) 방지
+        //Optional : NPE(NullPointerException) 방지 => orElseTrow 사용 개선?
         Optional<User> userO = userRepository.findById(id);
         if(userO.isEmpty()){
             return null;
