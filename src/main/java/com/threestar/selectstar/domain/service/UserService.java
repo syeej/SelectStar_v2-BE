@@ -45,10 +45,9 @@ public class UserService {
 	// 회원 검색
 	@Transactional(readOnly = true)
 	public List<GetUsersListResponse> searchUser(String searchWord) {
-		List<User> searchUser = userRepository.findByNicknameLike(searchWord);
-
+		List<User> searchUser = userRepository.findByNicknameLike("%"+searchWord+"%");
 		return searchUser.stream()
-			.map(user -> new GetUsersListResponse(user.getUserId(), user.getNickname(), user.getAboutMe()))
+			.map(GetUsersListResponse::fromEntity)
 			.collect(Collectors.toList());
 	}
 

@@ -18,11 +18,11 @@ public class GetUsersListResponse {
 	private String nickname;
 	private String aboutMe;
 
-	public User fromEntity(){
-		return User.builder()
-			.userId(userId)
-			.nickname(nickname)
-			.aboutMe(aboutMe)
+	public static GetUsersListResponse fromEntity(User user){
+		return GetUsersListResponse.builder()
+			.userId(user.getUserId())
+			.nickname(user.getNickname())
+			.aboutMe(user.getAboutMe())
 			.build();
 	}
 }
