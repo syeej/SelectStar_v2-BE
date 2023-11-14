@@ -55,4 +55,55 @@ public class MypageService {
             }
         }
     }
+
+    //마이페이지 개인정보 조회 요청
+    public GetMyInfoResponse getMyInfo(int id){
+        //Optional : NPE(NullPointerException) 방지
+        Optional<User> userO = userRepository.findById(id);
+        if(userO.isEmpty()){
+            return null;
+        }else {
+            User userE = userO.get();
+            return GetMyInfoResponse.builder()
+                    .userId(id)
+                    .name(userE.getName())
+                    .password(userE.getPassword())
+                    .email(userE.getEmail())
+                    .nickname(userE.getNickname())
+                    .location1(userE.getLocation1())
+                    .location2(userE.getLocation2())
+                    .interestLanguage(userE.getInterestLanguage())
+                    .interestFramework(userE.getInterestFramework())
+                    .interestJob(userE.getInterestJob())
+                    .build();
+            //return new GetMyInfoResponse(userE);
+        }
+    }
+
+    //마이페이지 개인정보 수정 요청
+    @Transactional
+    public String updateMyInfo(int uId, UpdateMyInfoRequest reqDTO){
+        Optional<User> userO = userRepository.findById(uId);
+        if(userO.isEmpty()){
+            return "찾는 사용자가 없습니다.";
+        }else {
+            User oldUserEntity = userO.get();
+            oldUserEntity.setPassword(reqDTO.getPassword());
+            oldUserEntity.setEmail(reqDTO.getEmail());
+            oldUserEntity.setNickname(reqDTO.getNickname());
+            oldUserEntity.setLocation1(reqDTO.getLocation1());
+            oldUserEntity.setLocation2(reqDTO.getLocation2());
+            oldUserEntity.setInterestLanguage(reqDTO.getInterestLanguage());
+            oldUserEntity.setInterestFramework(reqDTO.getInterestFramework());
+            oldUserEntity.setInterestJob(reqDTO.getInterestJob());
+            try {
+                userRepository.save(oldUserEntity);
+                return "success";
+            } catch (Exception e) {
+                log.info("update myinfo exception", e.getMessage());
+                return e.getMessage();
+            }
+        }
+    }
+
 }

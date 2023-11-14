@@ -21,6 +21,7 @@ public class UpdateMyInfoRequest {
 
     //개인정보
     private String password;
+    private String email;
     private String nickname;
     private String location1;
     private String location2;
@@ -28,7 +29,6 @@ public class UpdateMyInfoRequest {
     private String interestFramework;
     private String interestJob;
 
-    private String email;
     private byte[] profilePhoto;
 
 

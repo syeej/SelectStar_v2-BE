@@ -18,6 +18,7 @@ public class GetMyInfoResponse {
     //개인정보
     private String password;
     private String email;
+    private String nickname;
     private String location1;
     private String location2;
     private String interestLanguage;
