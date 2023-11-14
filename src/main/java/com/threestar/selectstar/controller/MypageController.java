@@ -22,8 +22,8 @@ import java.util.List;
 @Controller
 public class MypageController {
 
-    @Autowired
     private final MypageService mypageService;
+    private final MeetingService meetingService;
 
     //마이페이지-이력관리 조회
     @GetMapping("/users/profile/{id}")
