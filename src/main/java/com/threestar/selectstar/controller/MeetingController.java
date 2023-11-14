@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin(originPatterns = {"http://localhost:8080","http://localhost:63342"})
+@CrossOrigin(originPatterns = {"http://localhost:5173","http://localhost:63342"})
 @RestController
 @RequestMapping("/meeting")
 public class MeetingController {

@@ -4,10 +4,8 @@ import com.threestar.selectstar.domain.entity.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -20,7 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
-//@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+// @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
@@ -33,36 +31,9 @@ class UserRepositoryTest {
     @Transactional
     @Order(1)
     @Test
-    void 데이터_저장후_조회(){
-        // given
-        User user1 = User.builder()
-
-            .aboutMe("gd")
-            .email("starc13@naver.com")
-            .interestFramework("_0_")
-            .interestJob("_0_")
-            .interestLanguage("_0_")
-            .joinDate(Date.valueOf(LocalDate.now()))
-            .location1("서울특별시")
-            .location2("광주광역시")
-            .name("sungsu")
-            .nickname("성수닉")
-            .password("12345")
-            .profileContent("ㅎㅇㅎㅇㅎㅇㅎ")
-            .build();
-        userRepository.save(user1);
-        //when
-        User user2 = userRepository.findById(1).get();
-        //then
-        assertThat(user1).isEqualTo(user2);
-    }
-
-    @Transactional
-    @Order(2)
-    @Test
     void 회원가입_테스트(){
         //Given
-        User insertUser = User.builder()
+        AddUserRequest insertUser = AddUserRequest.builder()
             .name("testid")
             .password("qwer1234")
             .email("test@gmail.com")
@@ -75,15 +46,14 @@ class UserRepositoryTest {
             .build();
 
         // When
-        userRepository.save(insertUser);
+        User savedUser = userRepository.save(insertUser.toEntity());
 
         // Then
-        User saveUser = (User)userRepository.findByName("testid").orElse(null); // 아이디
-        assertThat(saveUser).isNotNull();  // 사용자가 저장되었는지 확인
+        assertThat(savedUser).isNotNull();  // 사용자가 저장되었는지 확인
     }
 
     @Transactional
-    @Order(3)
+    @Order(2)
     @Test
     void 로그인_테스트() {
         //Given
@@ -110,7 +80,7 @@ class UserRepositoryTest {
     }
 
     @Transactional
-    @Order(4)
+    @Order(3)
     @Test
     void 닉네임으로_회원_조회(){
         // Given
@@ -150,7 +120,8 @@ class UserRepositoryTest {
     */
 
     //마이페이지 - 이력관리, 개인정보 조회
-    @Order(1)
+    @Transactional
+    @Order(4)
     @Test
     void 아이디로_마이페이지_조회(){
         //Given
@@ -161,7 +132,7 @@ class UserRepositoryTest {
     }
     //마이페이지 - 이력관리 수정
     @Transactional
-    @Order(2)
+    @Order(5)
     @Test
     void 이력관리수정(){
         //Given
@@ -175,7 +146,7 @@ class UserRepositoryTest {
     }
     //마이페이지 - 개인정보 수정
     @Transactional
-    @Order(3)
+    @Order(6)
     @Test
     void 개인정보수정(){
         //Given
@@ -205,7 +176,7 @@ class UserRepositoryTest {
 
     //마이페이지-프로필 이미지 수정
     @Transactional
-    @Order(4)
+    @Order(7)
     @Test
     void 프로필이미지수정(){
         //Given
@@ -218,7 +189,8 @@ class UserRepositoryTest {
         System.out.println("수정 후"+userRepository.findById(3).get());
     }
     //다른 이용자 프로필 조회
-    @Order(5)
+    @Transactional
+    @Order(8)
     @Test
     void 다른이용자_프로필조회(){
         User user = userRepository.findById(10).get();

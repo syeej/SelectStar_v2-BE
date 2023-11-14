@@ -281,15 +281,15 @@ class MeetingRepositoryTest {
 
         List<Meeting> meetings = new ArrayList<>();
 
-        for (String lang : searchLanguages) {
+       /* for (String lang : searchLanguages) {
             for (String fw : searchFrameworks) {
                 for (String job : searchJobs) {
-                    /*meetings.addAll(meetingRepository.findByTitleLikeAndDeletedAndCategoryInAndInterestLanguageContainingAndInterestFrameworkContainingAndInterestJobContainingOrderByCreationDateDesc(
-                        "%"+searchWord+"%", deleted, categoryList, lang, fw, job));*/
+                    *//*meetings.addAll(meetingRepository.findByTitleLikeAndDeletedAndCategoryInAndInterestLanguageContainingAndInterestFrameworkContainingAndInterestJobContainingOrderByCreationDateDesc(
+                        "%"+searchWord+"%", deleted, categoryList, lang, fw, job));*//*
                     meetings.addAll(meetingRepository.findBySearchFilter(searchWord, deleted, categoryList, lang, fw, job));
                 }
             }
-        }
+        }*/
 
         // Then
         assertThat(meetings).isNotEmpty();

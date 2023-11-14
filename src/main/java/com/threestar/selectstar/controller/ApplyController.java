@@ -1,7 +1,7 @@
 package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.domain.service.ApplyService;
-import com.threestar.selectstar.dto.apply.requset.ApplyRequest;
+import com.threestar.selectstar.dto.apply.request.ApplyRequest;
 import com.threestar.selectstar.dto.apply.response.FindApplyByMeetingIdResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByUserIdResponse;
 import org.springframework.http.ResponseEntity;
