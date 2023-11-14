@@ -1,8 +1,11 @@
 package com.threestar.selectstar.controller;
 
+import com.threestar.selectstar.domain.service.MeetingService;
 import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.mypage.GetMyInfoResponse;
+import com.threestar.selectstar.dto.mypage.GetMyMeetingListResponse;
 import com.threestar.selectstar.dto.mypage.UpdateMyInfoRequest;
+import com.threestar.selectstar.exception.MeetingNotFoundException;
 import com.threestar.selectstar.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -19,6 +24,8 @@ public class MypageController {
 
     @Autowired
     private final MypageService mypageService;
+
+    private final MeetingService meetingService;
 
     //마이페이지-이력관리 조회
     @GetMapping("/users/profile/{id}")
@@ -63,4 +70,32 @@ public class MypageController {
             throw new UserNotFoundException(res);
         }
     }
+    //내가 작성한 글 목록 조회
+    @GetMapping("/users/mymeeting/{id}")
+    @ResponseBody
+    public ResponseEntity<?> getMyMeeingList(@PathVariable int id){
+        List<GetMyMeetingListResponse> res = meetingService.getMyMeetingList(id);
+        log.info("get mymeeting res >>"+res);
+        if(res == null){
+            throw new MeetingNotFoundException("글이 없습니다.");
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }
+    }
+
+    //내가 작성한 글 목록 카테고리별/모집상태별 조회
+    @GetMapping(value = "/users/mymeetingfilter/{id}", produces = "application/json; charset=utf-8")
+    public ResponseEntity<?> getMyMeetingListByFilter(@PathVariable int id,
+                                                      @RequestParam(name = "category", required = false) String strCategory,
+                                                      @RequestParam(name="status", required = false) String strStatus){
+        List<GetMyMeetingListResponse> res = meetingService.getMyMeetingListByFilter(id, strCategory, strStatus);
+        //log.info("get mymeetinglist by filter res >>"+res);
+        if(res == null){
+            throw new MeetingNotFoundException("글이 없습니다.");
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }
+
+    }
+
 }
