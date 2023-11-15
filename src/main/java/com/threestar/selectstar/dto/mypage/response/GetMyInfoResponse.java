@@ -1,18 +1,14 @@
-package com.threestar.selectstar.dto.mypage;
+package com.threestar.selectstar.dto.mypage.response;
 
 import com.threestar.selectstar.domain.entity.User;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@ToString
-@Getter
-@Setter
 @Builder
-public class UpdateMyInfoRequest {
+@Getter
+@ToString
+public class GetMyInfoResponse {
     //이력관리
     private int userId;
     private String name;
@@ -29,7 +25,16 @@ public class UpdateMyInfoRequest {
     private String interestFramework;
     private String interestJob;
 
-    private byte[] profilePhoto;
 
+    private String profilePhoto;
+/*
+    //생성자 사용 Entity -> DTO
+    public GetMyInfoResponse(User user){
+        this.userId = user.getUserId();
+        this.name = user.getName();
+        this.aboutMe = user.getAboutMe();
+        this.profileContent = user.getProfileContent();
+    }
+*/
 
 }

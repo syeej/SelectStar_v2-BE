@@ -1,14 +1,16 @@
 package com.threestar.selectstar.domain.service;
 
 import com.threestar.selectstar.domain.entity.User;
-import com.threestar.selectstar.dto.mypage.GetMyInfoResponse;
-import com.threestar.selectstar.dto.mypage.UpdateMyInfoRequest;
+import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
+import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
+import com.threestar.selectstar.dto.mypage.UserImgFileDTO;
 import com.threestar.selectstar.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.Optional;
 
 @Slf4j
@@ -26,12 +28,21 @@ public class MypageService {
             return null;
         }else {
             User userE = userO.get();
+            //기본 이미지
+            String encodeImg = "/image/global/userdefaultimg.png";
+            byte[] imgByte = userE.getProfilePhoto();
+            //유저 이미지 있으면 변환
+            if(imgByte != null){
+                encodeImg = "data:image/png;base64,"+Base64.getEncoder().encodeToString(imgByte);
+            }
+            //System.out.println(encodeImg.getClass());
             return GetMyInfoResponse.builder()
                     .userId(id)
-                    .name(userE.getName())
+                    .nickname(userE.getNickname())
+                    .email(userE.getEmail())
+                    .profilePhoto(encodeImg)
                     .aboutMe(userE.getAboutMe())
                     .profileContent(userE.getProfileContent())
-                    .profilePhoto(userE.getProfilePhoto())
                     .build();
             //return new GetMyInfoResponse(userE);
         }
@@ -65,12 +76,20 @@ public class MypageService {
             return null;
         }else {
             User userE = userO.get();
+            //기본 이미지
+            String encodeImg = "/image/global/userdefaultimg.png";
+            byte[] imgByte = userE.getProfilePhoto();
+            //유저 이미지 있으면 변환
+            if(imgByte != null){
+                encodeImg = "data:image/png;base64,"+Base64.getEncoder().encodeToString(imgByte);
+            }
             return GetMyInfoResponse.builder()
                     .userId(id)
                     .name(userE.getName())
                     .password(userE.getPassword())
                     .email(userE.getEmail())
                     .nickname(userE.getNickname())
+                    .profilePhoto(encodeImg)
                     .location1(userE.getLocation1())
                     .location2(userE.getLocation2())
                     .interestLanguage(userE.getInterestLanguage())
@@ -106,5 +125,23 @@ public class MypageService {
             }
         }
     }
-
+    //프로필 이미지 수정
+    @Transactional
+    public String updateMyProfileImg(int uId, UserImgFileDTO fileDTO){
+        Optional<User> userO = userRepository.findById(uId);
+        if(userO.isEmpty()){
+            return "찾는 사용자가 없습니다.";
+        }else {
+            User oldUserE = userO.get();
+            byte[] byteImg = null;
+            try {
+                byteImg = fileDTO.getProfilePhoto().getBytes();
+                oldUserE.setProfilePhoto(byteImg);
+                return "success";
+            }catch (Exception e){
+                log.info("update profile img error"+e.getMessage());
+                return e.getMessage();
+            }
+        }
+    }
 }
