@@ -19,6 +19,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -178,11 +180,25 @@ public class MeetingService {
 		}
 	}
 
-	// 모임글 검색 - 제목만
+	// 인기글 조회
 	@Transactional(readOnly = true)
+	public Page<FindMainPageResponse> getMeetingListRank() {
+
+		Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "views"));
+
+		// 일주일 전 날짜
+		LocalDate weekAgo = LocalDate.now().minusWeeks(1);
+
+		Page<Meeting> topMeetings = meetingRepository.findByDeletedIsAndCreationDateIsGreaterThanEqual(0, Date.valueOf(weekAgo), pageable);
+
+		return topMeetings.map(entity -> FindMainPageResponse.fromEntity(entity,
+				commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId())));
+	}
+
+	// 모임글 검색 - 제목만
+	 @Transactional(readOnly = true)
 	public List<FindMainPageResponse> searchMeeting(String searchWord) {
-		List<Meeting> searchMeeting = meetingRepository.findByTitleLikeAndDeletedIsOrderByCreationDateDesc(
-			"%" + searchWord + "%", 0);
+		List<Meeting> searchMeeting = meetingRepository.findByTitleLikeAndDeletedIsOrderByCreationDateDesc("%" + searchWord + "%", 0);
 
 		return searchMeeting.stream()
 			.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId())))
@@ -192,11 +208,9 @@ public class MeetingService {
 	// 모임글 검색 - 필터링
 	@Transactional(readOnly = true)
 	public List<FindMainPageResponse> searchMeetingWithFilter(
-		String searchWord, List<Integer> category, List<String> languages,
-		List<String> frameworks, List<String> jobs) {
+		String searchWord, List<Integer> category, List<String> languages, List<String> frameworks, List<String> jobs) {
 
-		List<Meeting> searchMeeting = meetingRepository.findBySearchFilter(
-			searchWord, 0, category, languages, frameworks, jobs);
+		List<Meeting> searchMeeting = meetingRepository.findBySearchFilter(searchWord, 0, category, languages, frameworks, jobs);
 		return searchMeeting.stream()
 			.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId())))
 			.collect(Collectors.toList());
