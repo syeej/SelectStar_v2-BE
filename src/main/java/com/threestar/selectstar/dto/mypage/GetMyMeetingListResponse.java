@@ -28,6 +28,10 @@ public class GetMyMeetingListResponse {
     //private String interestFramework;
     //private String interestJob;
 
+    private String email;
+    private String nickname;
+    private byte[] profilePhoto;
+
     public static GetMyMeetingListResponse fromEntity(Meeting meeting){
         return GetMyMeetingListResponse.builder()
                 .meetingId(meeting.getMeetingId())
