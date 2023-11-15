@@ -1,8 +1,8 @@
 package com.threestar.selectstar.domain.service;
 
 import com.threestar.selectstar.domain.entity.User;
-import com.threestar.selectstar.dto.mypage.GetMyInfoResponse;
-import com.threestar.selectstar.dto.mypage.UpdateMyInfoRequest;
+import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
+import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
 import com.threestar.selectstar.dto.mypage.UserImgFileDTO;
 import com.threestar.selectstar.repository.UserRepository;
 import jakarta.transaction.Transactional;

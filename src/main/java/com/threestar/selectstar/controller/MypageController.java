@@ -1,14 +1,16 @@
 package com.threestar.selectstar.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.threestar.selectstar.domain.service.MeetingService;
 import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.mypage.*;
+import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
+import com.threestar.selectstar.dto.mypage.response.GetMyApplyingListResponse;
+import com.threestar.selectstar.dto.mypage.response.GetMyInfoResponse;
+import com.threestar.selectstar.dto.mypage.response.GetMyMeetingListResponse;
 import com.threestar.selectstar.exception.MeetingNotFoundException;
 import com.threestar.selectstar.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
