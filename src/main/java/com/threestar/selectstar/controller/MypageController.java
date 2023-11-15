@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Controller
 public class MypageController {
@@ -44,7 +45,7 @@ public class MypageController {
         String res = mypageService.updateMyProfileInfo(id, userReq);
         log.info("update myProfileInfo res>> "+res);
         if(res.equals("success")){
-            return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+            return new ResponseEntity<>("success", HttpStatus.RESET_CONTENT);
         }else{
             throw new UserNotFoundException(res);
         }
