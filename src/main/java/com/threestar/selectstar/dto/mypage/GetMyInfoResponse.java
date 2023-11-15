@@ -25,7 +25,8 @@ public class GetMyInfoResponse {
     private String interestFramework;
     private String interestJob;
 
-    private byte[] profilePhoto;
+
+    private String profilePhoto;
 /*
     //생성자 사용 Entity -> DTO
     public GetMyInfoResponse(User user){

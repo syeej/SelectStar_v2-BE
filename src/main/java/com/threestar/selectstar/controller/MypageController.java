@@ -1,20 +1,20 @@
 package com.threestar.selectstar.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.threestar.selectstar.domain.service.MeetingService;
 import com.threestar.selectstar.domain.service.MypageService;
-import com.threestar.selectstar.dto.mypage.GetMyApplyingListResponse;
-import com.threestar.selectstar.dto.mypage.GetMyInfoResponse;
-import com.threestar.selectstar.dto.mypage.GetMyMeetingListResponse;
-import com.threestar.selectstar.dto.mypage.UpdateMyInfoRequest;
+import com.threestar.selectstar.dto.mypage.*;
 import com.threestar.selectstar.exception.MeetingNotFoundException;
 import com.threestar.selectstar.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -119,6 +119,20 @@ public class MypageController {
             throw new MeetingNotFoundException("글이 없습니다.");
         }else {
             return ResponseEntity.status(HttpStatus.OK).body(res);
+        }
+    }
+    //프로필 이미지 수정
+    @PutMapping(value = "/users/setting/img/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ResponseBody
+    public ResponseEntity<?> updateMyImg(@PathVariable int id, @RequestPart(name = "imgfile") MultipartFile file){
+        //log.info("file check  >>"+file);
+        UserImgFileDTO filedto = new UserImgFileDTO(file);
+        String res = mypageService.updateMyProfileImg(id, filedto);
+        //log.info("update myProfileInfo res>> "+res);
+        if(res.equals("success")){
+            return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+        }else{
+            throw new UserNotFoundException(res);
         }
     }
 }
