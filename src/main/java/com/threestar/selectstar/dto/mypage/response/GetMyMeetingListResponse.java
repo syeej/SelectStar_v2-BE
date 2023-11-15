@@ -1,4 +1,4 @@
-package com.threestar.selectstar.dto.mypage;
+package com.threestar.selectstar.dto.mypage.response;
 
 import com.threestar.selectstar.domain.entity.Meeting;
 import lombok.Builder;
@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 @ToString

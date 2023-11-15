@@ -1,16 +1,17 @@
 package com.threestar.selectstar.controller;
 
+import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.threestar.selectstar.domain.service.UserService;
 import com.threestar.selectstar.dto.user.request.AddUserRequest;
 import com.threestar.selectstar.dto.user.request.GetUserRequest;
 
+@Slf4j
 @RestController
 public class UserController {
 
@@ -55,5 +56,13 @@ public class UserController {
 		}
 	}
 
+	//다른 유저 프로필 조회
+	@GetMapping("/profiles/info/{id}")
+	@ResponseBody
+	public ResponseEntity<?> getUserProfile(@PathVariable int id){
+		GetUserProfileResponse res = userService.getUserProfile(id);
+		log.info("res >>"+res);
+		return ResponseEntity.status(HttpStatus.OK).body(res);
+	}
 
 }

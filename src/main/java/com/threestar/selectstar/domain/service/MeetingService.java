@@ -1,15 +1,12 @@
 package com.threestar.selectstar.domain.service;
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import com.threestar.selectstar.domain.entity.User;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
 import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
-import com.threestar.selectstar.dto.mypage.GetMyApplyingListResponse;
-import com.threestar.selectstar.dto.mypage.GetMyInfoResponse;
-import com.threestar.selectstar.dto.mypage.GetMyMeetingListResponse;
-import com.threestar.selectstar.exception.MeetingNotFoundException;
+import com.threestar.selectstar.dto.mypage.response.GetMyApplyingListResponse;
+import com.threestar.selectstar.dto.mypage.response.GetMyMeetingListResponse;
 import com.threestar.selectstar.repository.ApplyRepository;
 import com.threestar.selectstar.repository.CommentRepository;
 import com.threestar.selectstar.repository.MeetingRepository;
@@ -24,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j

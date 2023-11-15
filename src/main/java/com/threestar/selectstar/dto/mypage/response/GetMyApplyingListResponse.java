@@ -1,4 +1,4 @@
-package com.threestar.selectstar.dto.mypage;
+package com.threestar.selectstar.dto.mypage.response;
 
 import com.threestar.selectstar.domain.entity.Meeting;
 import lombok.Builder;
