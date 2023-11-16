@@ -129,9 +129,9 @@ public class MypageController {
         }
     }
     //프로필 이미지 수정
-    @PutMapping(value = "/users/setting/img/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "/users/setting/img/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<?> updateMyImg(@PathVariable int id, @RequestPart(name = "imgfile") MultipartFile file){
+    public ResponseEntity<?> updateMyImg(@PathVariable int id, @RequestPart(name = "profilePhoto") MultipartFile file){
         //log.info("file check  >>"+file);
         UserImgFileDTO filedto = new UserImgFileDTO(file);
         String res = mypageService.updateMyProfileImg(id, filedto);
