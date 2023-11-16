@@ -18,7 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @CrossOrigin(origins = "*")
@@ -41,13 +43,15 @@ public class MypageController {
     //마이 페이지-이력 관리 수정
     @PatchMapping("/users/profile/{id}")
     @ResponseBody
-    public ResponseEntity<?> updateMyProfile(@PathVariable int id, @RequestBody UpdateMyInfoRequest userReq){
-        String res = mypageService.updateMyProfileInfo(id, userReq);
-        log.info("update myProfileInfo res>> "+res);
-        if(res.equals("success")){
-            return new ResponseEntity<>("success", HttpStatus.RESET_CONTENT);
+    public Map<String, String> updateMyProfile(@PathVariable int id, @RequestBody UpdateMyInfoRequest userReq){
+        Map<String, String> map = new HashMap<>();
+        //String res = mypageService.updateMyProfileInfo(id, userReq);
+        map.put("result", mypageService.updateMyProfileInfo(id, userReq));
+        log.info("update myProfileInfo res>> "+map.get("result"));
+        if(map.get("result").equals("success")){
+            return map;
         }else{
-            throw new UserNotFoundException(res);
+            return null;
         }
     }
 
