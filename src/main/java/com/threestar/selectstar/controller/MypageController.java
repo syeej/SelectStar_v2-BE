@@ -18,9 +18,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Controller
 public class MypageController {
@@ -40,13 +43,15 @@ public class MypageController {
     //마이 페이지-이력 관리 수정
     @PatchMapping("/users/profile/{id}")
     @ResponseBody
-    public ResponseEntity<?> updateMyProfile(@PathVariable int id, @RequestBody UpdateMyInfoRequest userReq){
-        String res = mypageService.updateMyProfileInfo(id, userReq);
-        log.info("update myProfileInfo res>> "+res);
-        if(res.equals("success")){
-            return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+    public Map<String, String> updateMyProfile(@PathVariable int id, @RequestBody UpdateMyInfoRequest userReq){
+        Map<String, String> map = new HashMap<>();
+        //String res = mypageService.updateMyProfileInfo(id, userReq);
+        map.put("result", mypageService.updateMyProfileInfo(id, userReq));
+        log.info("update myProfileInfo res>> "+map.get("result"));
+        if(map.get("result").equals("success")){
+            return map;
         }else{
-            throw new UserNotFoundException(res);
+            return null;
         }
     }
 
@@ -124,9 +129,9 @@ public class MypageController {
         }
     }
     //프로필 이미지 수정
-    @PutMapping(value = "/users/setting/img/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "/users/setting/img/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<?> updateMyImg(@PathVariable int id, @RequestPart(name = "imgfile") MultipartFile file){
+    public ResponseEntity<?> updateMyImg(@PathVariable int id, @RequestPart(name = "profilePhoto") MultipartFile file){
         //log.info("file check  >>"+file);
         UserImgFileDTO filedto = new UserImgFileDTO(file);
         String res = mypageService.updateMyProfileImg(id, filedto);
