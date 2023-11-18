@@ -90,7 +90,8 @@ public class MypageController {
     }
 
     //내가 작성한 글 목록 카테고리별/모집상태별 조회
-    @GetMapping(value = "/users/mymeetingfilter/{id}", produces = "application/json; charset=utf-8")
+    //@GetMapping(value = "/users/mymeetingfilter/{id}", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/users/mymeetingfilter/{id}")
     public ResponseEntity<?> getMyMeetingListByFilter(@PathVariable int id,
                                                       @RequestParam(name = "category", required = false) String strCategory,
                                                       @RequestParam(name="status", required = false) String strStatus){
