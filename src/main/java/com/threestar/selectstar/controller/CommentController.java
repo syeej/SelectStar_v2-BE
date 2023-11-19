@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 
-@CrossOrigin(originPatterns = {"*"})
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/comment")
 public class CommentController {

@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin(originPatterns = {"*"})
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/meeting")
 public class MeetingController {

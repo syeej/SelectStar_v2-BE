@@ -21,6 +21,7 @@ public class GetMyMeetingListResponse {
     private int recruitmentCount;
     private int applicationCount;
     private String location;
+    private String description;
     private Date creationDate;
     //private String interestLanguage;
     //private String interestFramework;
@@ -42,6 +43,7 @@ public class GetMyMeetingListResponse {
                 .recruitmentCount(meeting.getRecruitmentCount())
                 .applicationCount(meeting.getApplicationCount())
                 .location(meeting.getLocation())
+                .description(meeting.getDescription())
                 .creationDate(meeting.getCreationDate())
                 .build();
     }

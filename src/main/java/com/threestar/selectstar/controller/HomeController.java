@@ -19,11 +19,13 @@ import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
 @RestController
 public class HomeController {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
+	private final MeetingService meetingService;
 
-	@Autowired
-	private	MeetingService meetingService;
+	public HomeController(MeetingService meetingService, UserService userService) {
+		this.meetingService = meetingService;
+		this.userService = userService;
+	}
 
 	// 검색 (제목)
 	@GetMapping("/search")
