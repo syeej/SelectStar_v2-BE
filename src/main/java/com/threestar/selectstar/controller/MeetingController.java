@@ -5,20 +5,24 @@ import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/meeting")
 public class MeetingController {
-    final
-    MeetingService meetingService;
-
+    final MeetingService meetingService;
+    final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     public MeetingController(MeetingService meetingService) {
         this.meetingService = meetingService;
     }
@@ -39,7 +43,17 @@ public class MeetingController {
     @PostMapping
     public Map<String,String> meetingAdd(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest){
         Map<String, String> succesMap = new HashMap<>();
-        succesMap.put("result",meetingService.addMeeting(addUpdateMeetingRequest));
+        int error = 0;
+        for (ConstraintViolation<AddUpdateMeetingRequest> addUpdateMeetingRequestConstraintViolation : validator.validate(addUpdateMeetingRequest)) {
+            System.out.println(addUpdateMeetingRequestConstraintViolation);
+            error = 1;
+        }
+        if (error==1) {
+            succesMap.put("result","fail");
+            return succesMap;
+        }
+
+        succesMap.put("result",meetingService.addMeeting( addUpdateMeetingRequest));
         return succesMap;
     }
     // 수정 => AddUpdateMeetingRequest 변경 불가능 한 값 생각 해야 됨...

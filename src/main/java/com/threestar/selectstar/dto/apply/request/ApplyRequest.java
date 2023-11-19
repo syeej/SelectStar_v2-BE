@@ -2,6 +2,7 @@ package com.threestar.selectstar.dto.apply.request;
 
 import com.threestar.selectstar.domain.entity.Apply;
 import com.threestar.selectstar.domain.entity.ApplyID;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.sql.Date;
@@ -13,10 +14,14 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplyRequest {
+    @NotBlank
     private Integer userId;
+    @NotBlank
     private Integer meetingId;
+    @NotBlank
     private String emailAddress;
     private String snsAddress;
+    @NotBlank
     private String reason;
     private Date applicationDate;
 
