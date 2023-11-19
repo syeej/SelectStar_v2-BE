@@ -29,13 +29,14 @@ public class MypageService {
         }else {
             User userE = userO.get();
             //기본 이미지
-            String encodeImg = "/image/global/userdefaultimg.png";
+            //String encodeImg = "/image/global/userdefaultimg.png";
+            String encodeImg = "";
             byte[] imgByte = userE.getProfilePhoto();
             //유저 이미지 있으면 변환
             if(imgByte != null){
                 encodeImg = "data:image/png;base64,"+Base64.getEncoder().encodeToString(imgByte);
             }
-            //System.out.println(encodeImg.getClass());
+            System.out.println("encodeImg >>"+encodeImg);
             return GetMyInfoResponse.builder()
                     .userId(id)
                     .nickname(userE.getNickname())
@@ -77,12 +78,13 @@ public class MypageService {
         }else {
             User userE = userO.get();
             //기본 이미지
-            String encodeImg = "/image/global/userdefaultimg.png";
+            String encodeImg = "/assets/image/global/userdefaultimg.png";
             byte[] imgByte = userE.getProfilePhoto();
             //유저 이미지 있으면 변환
             if(imgByte != null){
                 encodeImg = "data:image/png;base64,"+Base64.getEncoder().encodeToString(imgByte);
             }
+            System.out.println("encodeImg >>"+encodeImg);
             return GetMyInfoResponse.builder()
                     .userId(id)
                     .name(userE.getName())
