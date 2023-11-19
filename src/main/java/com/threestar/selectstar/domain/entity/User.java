@@ -5,7 +5,9 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -34,6 +36,8 @@ public class User {
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
+    private int deleted;
+    private String role;
 
     @Override
     public boolean equals(Object o) {
@@ -65,5 +69,12 @@ public class User {
         this.interestLanguage = interestLanguage;
         this.interestFramework = interestFramework;
         this.interestJob = interestJob;
+    }
+
+    public List<String> getRoleList(){
+        if(this.role.length() > 0){
+            return Arrays.asList(this.role.split(","));
+        }
+        return new ArrayList<>();
     }
 }

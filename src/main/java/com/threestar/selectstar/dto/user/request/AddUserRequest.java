@@ -26,17 +26,17 @@ public class AddUserRequest {
 	private String interestFramework;
 	private String interestJob;
 
-	public User toEntity(){
+	public static User toEntity(AddUserRequest request){
 		return User.builder()
-			.name(name)
-			.password(password)
-			.email(email)
-			.nickname(nickname)
-			.location1(location1)
-			.joinDate(joinDate)
-			.interestLanguage(interestLanguage)
-			.interestFramework(interestFramework)
-			.interestJob(interestJob)
+			.name(request.getName())
+			.password(request.getPassword())
+			.email(request.getEmail())
+			.nickname(request.getNickname())
+			.location1(request.getLocation1())
+			.joinDate(request.getJoinDate())
+			.interestLanguage(request.getInterestLanguage())
+			.interestFramework(request.getInterestFramework())
+			.interestJob(request.getInterestJob())
 			.build();
 	}
 }
