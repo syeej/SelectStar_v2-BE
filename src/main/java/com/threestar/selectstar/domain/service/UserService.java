@@ -6,7 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.threestar.selectstar.dto.user.response.GetUserProfileResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,32 +18,49 @@ import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
 import com.threestar.selectstar.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-	final UserRepository userRepository;
-	@Autowired
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder passwordEncoder;
 
-	// 회원 가입 ( 구현 예정 - 중복 확인, 비밀번호 )
+	// 회원 가입
 	@Transactional
 	public Integer addUser(AddUserRequest request){
-		validateDuplicateUser(request);  // 중복 확인
-		User savedUser = userRepository.save(request.toEntity());
+		User user = AddUserRequest.toEntity(request);
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		user.setRole("USER");
+
+		User savedUser = userRepository.save(user);
 		return savedUser.getUserId();
 	}
-
-	private void validateDuplicateUser(AddUserRequest request) {
-		userRepository.findByName(request.getName())
-			.ifPresent(u ->{
-				throw new IllegalStateException("이미 존재하는 아이디입니다.");
-			});
+	public void checkDuplicate(String type, String value) {
+		switch (type) {
+			case "name":
+				checkDuplicateName(value);
+				break;
+			case "nickname":
+				checkDuplicateNickname(value);
+				break;
+		}
 	}
 
-	// 로그인
-	public boolean login(GetUserRequest request) {
-		return userRepository.findByNameAndPassword(request.getName(), request.getPassword()).isPresent();
+	private void checkDuplicateName(String name) {
+		User user = userRepository.findByName(name);
+//		userRepository.findByName(name)
+//			.ifPresent(u -> {
+//				throw new IllegalStateException("이미 존재하는 아이디입니다.");
+//			});
+	}
+	private void checkDuplicateNickname(String nickname) {
+		userRepository.findByNickname(nickname)
+				.ifPresent(u -> {
+					throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+				});
+	}
+
+	public Optional<User> loginUser(GetUserRequest request){
+		return userRepository.findByNameAndPassword(request.getName(), request.getPassword());
 	}
 
 	// 회원 검색
