@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@CrossOrigin(originPatterns = {"*"})
 @Slf4j
 @RequiredArgsConstructor
 @Controller

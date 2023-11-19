@@ -11,6 +11,7 @@ import com.threestar.selectstar.domain.service.UserService;
 import com.threestar.selectstar.dto.user.request.AddUserRequest;
 import com.threestar.selectstar.dto.user.request.GetUserRequest;
 
+@CrossOrigin(originPatterns = {"*"})
 @Slf4j
 @RestController
 public class UserController {
