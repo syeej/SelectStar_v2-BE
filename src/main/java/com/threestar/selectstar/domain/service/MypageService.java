@@ -87,11 +87,11 @@ public class MypageService {
             System.out.println("encodeImg >>"+encodeImg);
             return GetMyInfoResponse.builder()
                     .userId(id)
-                    .name(userE.getName())
+                    //.name(userE.getName())
                     .password(userE.getPassword())
                     .email(userE.getEmail())
                     .nickname(userE.getNickname())
-                    .profilePhoto(encodeImg)
+                    //.profilePhoto(encodeImg)
                     .location1(userE.getLocation1())
                     .location2(userE.getLocation2())
                     .interestLanguage(userE.getInterestLanguage())

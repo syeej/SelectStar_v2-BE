@@ -97,4 +97,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);  // 생성된 JWT 토큰을 HTTP 응답 헤더에 추가
 	}
 
+
+
 }

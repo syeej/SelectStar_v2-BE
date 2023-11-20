@@ -1,5 +1,14 @@
 package com.threestar.selectstar.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.impl.ClaimsHolder;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.threestar.selectstar.config.auth.CustomUserDetails;
+import com.threestar.selectstar.config.auth.CustomUserDetailsService;
+import com.threestar.selectstar.config.jwt.JwtAuthenticationFilter;
+import com.threestar.selectstar.config.jwt.JwtService;
+import com.threestar.selectstar.domain.entity.User;
 import com.threestar.selectstar.domain.service.MeetingService;
 import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.mypage.*;
@@ -11,19 +20,28 @@ import com.threestar.selectstar.exception.MeetingNotFoundException;
 import com.threestar.selectstar.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @CrossOrigin(origins = "*")
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class MypageController {
@@ -31,10 +49,20 @@ public class MypageController {
     private final MypageService mypageService;
     private final MeetingService meetingService;
 
+    @Value("${SECRET_KEY}")
+    private String sKey;
+
+    @Autowired
+    private JwtService jwtService;
+
     //마이페이지-이력관리 조회
     @GetMapping("/users/profile/{id}")
     @ResponseBody
-    public ResponseEntity<GetMyInfoResponse> getMyProfileInfo(@PathVariable("id") int id){
+    public ResponseEntity<GetMyInfoResponse> getMyProfileInfo(@PathVariable("id") int id, @AuthenticationPrincipal CustomUserDetails userDetails){
+
+        int uId1 = userDetails.getUserId();
+        log.info("userId 찾기1  >>"+uId1);
+
         GetMyInfoResponse res = mypageService.getMyProfileInfo(id);
         log.info("res >>"+res);
         return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -81,7 +109,7 @@ public class MypageController {
     @ResponseBody
     public ResponseEntity<?> getMyMeeingList(@PathVariable int id){
         List<GetMyMeetingListResponse> res = meetingService.getMyMeetingList(id);
-        log.info("get mymeeting res >> "+res);
+        log.info("get mymeeting res >>"+res);
         if(res == null){
             throw new MeetingNotFoundException("글이 없습니다.");
         }else {
@@ -117,13 +145,13 @@ public class MypageController {
     }
 
     //내가 신청한 글 목록 카테고리별/모집상태별 조회
-    @GetMapping(value = "/users/myapplyingfilter/{id}", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/users/myapplyingfilter/{id}")
     public ResponseEntity<?> getMyApplyingListByFilterr(@PathVariable int id,
                                                         @RequestParam(name = "category", required = false) String strCategory,
                                                         @RequestParam(name="status", required = false) String strStatus){
         List<GetMyApplyingListResponse> res = meetingService.getMyAppyingListByFilter(id, strCategory,strStatus);
         log.info("get applying filter res >>"+res);
-        if(res == null){
+        if(res == null|| res.isEmpty()) {
             throw new MeetingNotFoundException("글이 없습니다.");
         }else {
             return ResponseEntity.status(HttpStatus.OK).body(res);
