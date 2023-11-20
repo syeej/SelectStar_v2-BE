@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(originPatterns = {"*"})
 @Slf4j
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
@@ -82,7 +81,7 @@ public class MypageController {
     @ResponseBody
     public ResponseEntity<?> getMyMeeingList(@PathVariable int id){
         List<GetMyMeetingListResponse> res = meetingService.getMyMeetingList(id);
-        log.info("get mymeeting res >>"+res);
+        log.info("get mymeeting res >> "+res);
         if(res == null){
             throw new MeetingNotFoundException("글이 없습니다.");
         }else {
