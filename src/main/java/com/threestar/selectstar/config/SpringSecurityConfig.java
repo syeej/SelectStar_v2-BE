@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -49,25 +50,30 @@ public class SpringSecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer configure() {
+        return (web -> web.ignoring().requestMatchers("/search/**", "/users/**", "/users/myapplying/*"));
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpsecurity) throws Exception {
         httpsecurity
-                    .addFilter(corsConfig.corsFilter()) // Spring Security 사용시 CORS 설정을 하기 위해서 Authentication Filter 인증보다 앞에 필터를 추가
-                    .csrf().disable()  // CSRF 보호 비활성화
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않도록 설정
+                .addFilter(corsConfig.corsFilter()) // Spring Security 사용시 CORS 설정을 하기 위해서 Authentication Filter 인증보다 앞에 필터를 추가
+                .csrf().disable()  // CSRF 보호 비활성화
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않도록 설정
                 .and()
-                    // 로그인 폼과 HTTP 기본 인증 비활성화
-                    .formLogin().disable()  // Security가 자동으로 지원하는 로그인폼을 사용하지 않겠다는 의미
-                    .httpBasic().disable()  // JWT 방식을 사용할 예정이니 비활성화 - Bearer
+                // 로그인 폼과 HTTP 기본 인증 비활성화
+                .formLogin().disable()  // Security가 자동으로 지원하는 로그인폼을 사용하지 않겠다는 의미
+                .httpBasic().disable()  // JWT 방식을 사용할 예정이니 비활성화 - Bearer
 
-                    // JWT 인증 및 인가 필터를 추가
-                    .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터
-                    .addFilter(jwtAuthorizationFilter())  // JWT 인가 필터
-                
+                // JWT 인증 및 인가 필터를 추가
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터
+                .addFilter(jwtAuthorizationFilter())  // JWT 인가 필터
+
                 // 요청에 대한 권한 설정
                 .authorizeHttpRequests(authorize -> authorize  // authorizeRequests() : deprecated로 authorizeHttpRequest() 사용
-                    .requestMatchers("/","/meeting","/users/**" ,"/login","/rankMeeting").permitAll()  // 인증 필요 없음
+                                .requestMatchers("/","/meeting","/apply/**","/meeting/**","/comment/meeting/**","/users/**" ,"/login","/rankMeeting").permitAll()  // 인증 필요 없음
 //                    .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자 구현 예정
-                    .anyRequest().authenticated()  // 나머지는 인증 필요
+                                .anyRequest().authenticated()  // 나머지는 인증 필요
                 );
         return httpsecurity.build();
     }
