@@ -15,6 +15,7 @@ import com.threestar.selectstar.domain.service.MeetingService;
 import com.threestar.selectstar.domain.service.UserService;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
+@CrossOrigin(originPatterns = {"*"})
 @RestController
 public class HomeController {
 

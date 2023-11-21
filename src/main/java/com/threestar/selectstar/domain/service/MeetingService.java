@@ -82,7 +82,11 @@ public class MeetingService {
 		return byDeletedIsOrderByCreationDateDesc.map(entity -> FindMainPageResponse.fromEntity(entity,
 			commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId())));
 	}
+	@Transactional
 	public FindMeetingOneResponse findMeetingOne(int meetingId){
+		// => 조회수 1 증가
+		Meeting entity = meetingRepository.findById(meetingId).orElseThrow(IllegalArgumentException::new);
+		entity.setViews(entity.getViews() + 1);
 		return meetingRepository.findById(meetingId).
 			map(meeting -> FindMeetingOneResponse.fromEntity(meeting, meeting.getUser().getNickname()))
 			.orElse(null);
@@ -103,10 +107,10 @@ public class MeetingService {
 	@Transactional
 	public String updateMeeting(AddUpdateMeetingRequest addUpdateMeetingRequest){
 		try {
-			meetingRepository.save(AddUpdateMeetingRequest.toEntity(
+			AddUpdateMeetingRequest.meetingRequestUpdate(
 				addUpdateMeetingRequest,
-				userRepository.findById(addUpdateMeetingRequest.getUserId())
-					.orElseThrow(IllegalArgumentException::new)));
+					meetingRepository.findById(addUpdateMeetingRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new));
+
 			return "success";
 		} catch (Exception e){
 			return e.getMessage();

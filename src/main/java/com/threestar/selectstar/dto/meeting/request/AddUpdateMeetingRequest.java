@@ -2,8 +2,10 @@ package com.threestar.selectstar.dto.meeting.request;
 
 import com.threestar.selectstar.domain.entity.Meeting;
 import com.threestar.selectstar.domain.entity.User;
-import lombok.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import java.sql.Date;
 
 
@@ -16,14 +18,18 @@ import java.sql.Date;
 public class AddUpdateMeetingRequest {
     private Integer meetingId;
     private Integer userId;
+    @NotBlank(message = "must not be blank")
     private String title;
     private Integer category;
     private Integer status;
     private Date applicationDeadline;
     private Integer views;
+    @NotNull(message = "must not be null")
     private Integer recruitmentCount;
     private Integer applicationCount;
+    @NotBlank(message = "must not be blank")
     private String location;
+    @NotBlank(message = "must not be blank")
     private String description;
     private Date creationDate;
     private String interestLanguage;
@@ -33,15 +39,15 @@ public class AddUpdateMeetingRequest {
 
     public static Meeting toEntity(AddUpdateMeetingRequest addUpdateMeetingRequest, User user) {
         return Meeting.builder()
-                .meetingId(addUpdateMeetingRequest.getMeetingId())
                 .user(user) // User 엔터티로 변환
                 .title(addUpdateMeetingRequest.getTitle())
                 .category(addUpdateMeetingRequest.getCategory())
-                .status(addUpdateMeetingRequest.getStatus())
+                .status(0)
+                .views(0)
+                .applicationCount(0)
+                .views(0)
                 .applicationDeadline(addUpdateMeetingRequest.getApplicationDeadline())
-                .views(addUpdateMeetingRequest.getViews())
                 .recruitmentCount(addUpdateMeetingRequest.getRecruitmentCount())
-                .applicationCount(addUpdateMeetingRequest.getApplicationCount())
                 .location(addUpdateMeetingRequest.getLocation())
                 .description(addUpdateMeetingRequest.getDescription())
                 .creationDate(addUpdateMeetingRequest.getCreationDate())
@@ -52,8 +58,16 @@ public class AddUpdateMeetingRequest {
     }
     // 업데이트 수정 => https://jojoldu.tistory.com/415
 
-    public void meetingRequestUpdate(AddUpdateMeetingRequest add, User user) {
-        this.meetingId = add.getMeetingId();
+    public static void meetingRequestUpdate(AddUpdateMeetingRequest updateRequest, Meeting meeting) {
+        meeting.setTitle(updateRequest.getTitle());
+        meeting.setCategory(updateRequest.getCategory());
+        meeting.setApplicationDeadline(updateRequest.getApplicationDeadline());
+        meeting.setLocation(updateRequest.getLocation());
+        meeting.setRecruitmentCount(updateRequest.getRecruitmentCount());
+        meeting.setInterestLanguage(updateRequest.getInterestLanguage());
+        meeting.setInterestFramework(updateRequest.getInterestFramework());
+        meeting.setInterestJob(updateRequest.getInterestJob());
+        meeting.setDescription(updateRequest.getDescription());
     }
 }
 

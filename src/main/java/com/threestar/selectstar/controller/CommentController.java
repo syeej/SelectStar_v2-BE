@@ -9,8 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/comment")
@@ -24,8 +27,9 @@ public class CommentController {
         this.commentService = commentService;
     }
     // => 삭제 상태 조회로 변경 할 것...
+    @CrossOrigin(originPatterns = {"http://localhost:5173"})
     @GetMapping("/meeting/{meetingId}")
-    public ResponseEntity<Page<FindCommentResponse>> commentListByMeetingId(@PathVariable int meetingId, int page){
+    public ResponseEntity<Page<FindCommentResponse>> commentListByMeetingId(@PathVariable int meetingId,@RequestParam(defaultValue = "0") int page){
         return ResponseEntity.ok()
                         .body(commentService.findComment(meetingId, PageRequest.of(page,10)));
     }
@@ -38,7 +42,7 @@ public class CommentController {
     // 글 등록
     // return new ResponseEntity<>(response, HttpStatus.CREATED) 로 수정 해야 함
     @PostMapping("/meeting/{meetingId}")
-    public Map<String, String> addComment(@PathVariable int meetingId, AddCommentRequest addCommentRequest){
+    public Map<String, String> addComment(@PathVariable int meetingId,@RequestBody AddCommentRequest addCommentRequest){
         Map<String, String> succesMap = new HashMap<>();
         addCommentRequest.setMeetingId(meetingId);
         succesMap.put("result",commentService.addComment(addCommentRequest));
