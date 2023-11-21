@@ -1,16 +1,9 @@
 package com.threestar.selectstar.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.impl.ClaimsHolder;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
+
 import com.threestar.selectstar.config.auth.CustomUserDetails;
-import com.threestar.selectstar.config.auth.CustomUserDetailsService;
-import com.threestar.selectstar.config.jwt.JwtAuthenticationFilter;
-import com.threestar.selectstar.config.jwt.JwtService;
-import com.threestar.selectstar.domain.entity.User;
 import com.threestar.selectstar.domain.service.MeetingService;
-import com.threestar.selectstar.domain.service.MypageService;
+import com.threestar.selectstar.domain.service.UserService;
 import com.threestar.selectstar.dto.mypage.*;
 import com.threestar.selectstar.dto.mypage.request.UpdateMyInfoRequest;
 import com.threestar.selectstar.dto.mypage.response.GetMyApplyingListResponse;
@@ -20,22 +13,14 @@ import com.threestar.selectstar.exception.MeetingNotFoundException;
 import com.threestar.selectstar.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,35 +31,33 @@ import java.util.Map;
 @Controller
 public class MypageController {
 
-    private final MypageService mypageService;
+    private final UserService userService;
     private final MeetingService meetingService;
 
-    @Value("${SECRET_KEY}")
-    private String sKey;
-
-    @Autowired
-    private JwtService jwtService;
-
     //마이페이지-이력관리 조회
-    @GetMapping("/users/profile/{id}")
+    @GetMapping("/users/profile")
     @ResponseBody
-    public ResponseEntity<GetMyInfoResponse> getMyProfileInfo(@PathVariable("id") int id, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<GetMyInfoResponse> getMyProfileInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
 
-        int uId1 = userDetails.getUserId();
-        log.info("userId 찾기1  >>"+uId1);
+        int uId = userDetails.getUserId();
+        log.info("myprofile 조회 userId 찾기1  >>"+uId);
 
-        GetMyInfoResponse res = mypageService.getMyProfileInfo(id);
+        GetMyInfoResponse res = userService.getMyProfileInfo(uId);
         log.info("res >>"+res);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
     //마이 페이지-이력 관리 수정
-    @PatchMapping("/users/profile/{id}")
+    @PatchMapping("/users/profile")
     @ResponseBody
-    public Map<String, String> updateMyProfile(@PathVariable int id, @RequestBody UpdateMyInfoRequest userReq){
+    public Map<String, String> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                               @RequestBody UpdateMyInfoRequest userReq){
+        int uId = userDetails.getUserId();
+        log.info("myprofile 수정 userId 찾기1  >>"+uId);
+
         Map<String, String> map = new HashMap<>();
         //String res = mypageService.updateMyProfileInfo(id, userReq);
-        map.put("result", mypageService.updateMyProfileInfo(id, userReq));
+        map.put("result", userService.updateMyProfileInfo(uId, userReq));
         log.info("update myProfileInfo res>> "+map.get("result"));
         if(map.get("result").equals("success")){
             return map;
@@ -84,19 +67,26 @@ public class MypageController {
     }
 
     //마이페이지-개인정보 조회
-    @GetMapping("/users/setting/{id}")
+    @GetMapping("/users/setting")
     @ResponseBody
-    public ResponseEntity<?> getMyInfo(@PathVariable int id){
-        GetMyInfoResponse res = mypageService.getMyInfo(id);
+    public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
+        int uId = userDetails.getUserId();
+        log.info("myinfo 조회 userId 찾기1  >>"+uId);
+
+        GetMyInfoResponse res = userService.getMyInfo(uId);
         log.info("get myInfo res>> "+res);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
     //마이페이지-개인정보 수정
-    @PutMapping("/users/setting/{id}")
+    @PutMapping("/users/setting")
     @ResponseBody
-    public ResponseEntity<?> updateMyInfo(@PathVariable int id, @RequestBody UpdateMyInfoRequest req){
-        String res = mypageService.updateMyInfo(id, req);
+    public ResponseEntity<?> updateMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                          @RequestBody UpdateMyInfoRequest req){
+        int uId = userDetails.getUserId();
+        log.info("myinfo 수정 userId 찾기1  >>"+uId);
+
+        String res = userService.updateMyInfo(uId, req);
         log.info("update myProfileInfo res>> "+res);
         if(res.equals("success")){
             return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
@@ -105,65 +95,106 @@ public class MypageController {
         }
     }
     //내가 작성한 글 목록 조회
-    @GetMapping("/users/mymeeting/{id}")
+    @GetMapping("/users/mymeeting")
     @ResponseBody
-    public ResponseEntity<?> getMyMeeingList(@PathVariable int id){
-        List<GetMyMeetingListResponse> res = meetingService.getMyMeetingList(id);
-        log.info("get mymeeting res >>"+res);
-        if(res == null){
-            throw new MeetingNotFoundException("글이 없습니다.");
-        }else {
-            return ResponseEntity.status(HttpStatus.OK).body(res);
+    public ResponseEntity<?> getMyMeeingList(@AuthenticationPrincipal CustomUserDetails userDetails){
+        try {
+            int uId = userDetails.getUserId();
+            log.info("mymeeting 조회 userId 찾기1  >>" + uId);
+
+            List<GetMyMeetingListResponse> res = meetingService.getMyMeetingList(uId);
+            log.info("get mymeeting res >>" + res);
+
+            if (res == null) {
+                throw new MeetingNotFoundException("글이 없습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(res);
+            }
+        }catch (MeetingNotFoundException mnfe){
+            log.error(mnfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mnfe.getMessage());
         }
     }
 
     //내가 작성한 글 목록 카테고리별/모집상태별 조회
     //@GetMapping(value = "/users/mymeetingfilter/{id}", produces = "application/json; charset=utf-8")
-    @GetMapping(value = "/users/mymeetingfilter/{id}")
-    public ResponseEntity<?> getMyMeetingListByFilter(@PathVariable int id,
+    @GetMapping(value = "/users/mymeetingfilter")
+    public ResponseEntity<?> getMyMeetingListByFilter(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                       @RequestParam(name = "category", required = false) String strCategory,
                                                       @RequestParam(name="status", required = false) String strStatus){
-        List<GetMyMeetingListResponse> res = meetingService.getMyMeetingListByFilter(id, strCategory, strStatus);
-        //log.info("get mymeetinglist by filter res >>"+res);
-        if(res == null){
-            throw new MeetingNotFoundException("글이 없습니다.");
-        }else {
-            return ResponseEntity.status(HttpStatus.OK).body(res);
+        try {
+            int uId = userDetails.getUserId();
+            log.info("mymeeting filter 조회 userId 찾기1  >>" + uId);
+
+            List<GetMyMeetingListResponse> res = meetingService.getMyMeetingListByFilter(uId, strCategory, strStatus);
+            //log.info("get mymeetinglist by filter res >>"+res);
+
+            if (res == null) {
+                throw new MeetingNotFoundException("글이 없습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(res);
+            }
+        }catch (MeetingNotFoundException mnfe){
+            log.error(mnfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mnfe.getMessage());
         }
     }
+
     //내가 신청한 글 목록 조회
-    @GetMapping("/users/myapplying/{id}")
+    @GetMapping("/users/myapplying")
     @ResponseBody
-    public ResponseEntity<?> getMyApplyingList(@PathVariable int id){
-        List<GetMyApplyingListResponse> res = meetingService.getMyApplyingList(id);
-        log.info("get applying res >>"+res);
-        if(res == null){
-            throw new MeetingNotFoundException("글이 없습니다.");
-        }else {
-            return ResponseEntity.status(HttpStatus.OK).body(res);
+    public ResponseEntity<?> getMyApplyingList(@AuthenticationPrincipal CustomUserDetails userDetails){
+        try {
+            int uId = userDetails.getUserId();
+            log.info("mymeeting 조회 userId 찾기1  >>" + uId);
+
+            List<GetMyApplyingListResponse> res = meetingService.getMyApplyingList(uId);
+            log.info("get applying res >>" + res);
+            if (res == null) {
+                throw new MeetingNotFoundException("글이 없습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(res);
+            }
+        }catch (MeetingNotFoundException mnfe){
+            log.error(mnfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mnfe.getMessage());
         }
     }
 
     //내가 신청한 글 목록 카테고리별/모집상태별 조회
-    @GetMapping(value = "/users/myapplyingfilter/{id}")
-    public ResponseEntity<?> getMyApplyingListByFilterr(@PathVariable int id,
+    @GetMapping(value = "/users/myapplyingfilter")
+    public ResponseEntity<?> getMyApplyingListByFilterr(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @RequestParam(name = "category", required = false) String strCategory,
                                                         @RequestParam(name="status", required = false) String strStatus){
-        List<GetMyApplyingListResponse> res = meetingService.getMyAppyingListByFilter(id, strCategory,strStatus);
-        log.info("get applying filter res >>"+res);
-        if(res == null|| res.isEmpty()) {
-            throw new MeetingNotFoundException("글이 없습니다.");
-        }else {
-            return ResponseEntity.status(HttpStatus.OK).body(res);
+        try {
+            int uId = userDetails.getUserId();
+            log.info("mymeeting 조회 userId 찾기1  >>" + uId);
+
+            List<GetMyApplyingListResponse> res = meetingService.getMyAppyingListByFilter(uId, strCategory, strStatus);
+            log.info("get applying filter res >>" + res);
+            if (res == null || res.isEmpty()) {
+                throw new MeetingNotFoundException("글이 없습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(res);
+            }
+        }catch (MeetingNotFoundException mnfe){
+            log.error(mnfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mnfe.getMessage());
         }
     }
+
     //프로필 이미지 수정
-    @PutMapping(value = "/users/setting/img/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/users/setting/img", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public ResponseEntity<?> updateMyImg(@PathVariable int id, @RequestPart(name = "profilePhoto") MultipartFile file){
+    public ResponseEntity<?> updateMyImg(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                         @RequestPart(name = "profilePhoto") MultipartFile file){
+
+        int uId = userDetails.getUserId();
+        log.info("myinfo 수정 userId 찾기1  >>"+uId);
+
         //log.info("file check  >>"+file);
         UserImgFileDTO filedto = new UserImgFileDTO(file);
-        String res = mypageService.updateMyProfileImg(id, filedto);
+        String res = userService.updateMyProfileImg(uId, filedto);
         //log.info("update myProfileInfo res>> "+res);
         if(res.equals("success")){
             return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
