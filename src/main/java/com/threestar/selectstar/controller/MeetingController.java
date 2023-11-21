@@ -1,6 +1,9 @@
 package com.threestar.selectstar.controller;
 
+import com.threestar.selectstar.config.auth.CustomUserDetails;
+import com.threestar.selectstar.config.jwt.JwtService;
 import com.threestar.selectstar.domain.service.MeetingService;
+import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
@@ -8,9 +11,11 @@ import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,9 +28,13 @@ import java.util.Map;
 public class MeetingController {
     final MeetingService meetingService;
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    public MeetingController(MeetingService meetingService) {
+    private final MypageService mypageService;
+
+    public MeetingController(MeetingService meetingService, MypageService mypageService) {
         this.meetingService = meetingService;
+        this.mypageService = mypageService;
     }
+
 
     // 전체 조회(페이징)
     @GetMapping
@@ -41,9 +50,10 @@ public class MeetingController {
     }
     // 등록
     @PostMapping
-    public Map<String,String> meetingAdd(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest){
+    public Map<String,String> meetingAdd(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         Map<String, String> succesMap = new HashMap<>();
         int error = 0;
+        addUpdateMeetingRequest.setUserId(userDetails.getUserId());
         for (ConstraintViolation<AddUpdateMeetingRequest> addUpdateMeetingRequestConstraintViolation : validator.validate(addUpdateMeetingRequest)) {
             System.out.println(addUpdateMeetingRequestConstraintViolation);
             error = 1;
@@ -58,8 +68,9 @@ public class MeetingController {
     }
     // 수정 => AddUpdateMeetingRequest 변경 불가능 한 값 생각 해야 됨...
     @PutMapping
-    public Map<String,String> meetingModify(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest){
+    public Map<String,String> meetingModify(@RequestBody AddUpdateMeetingRequest addUpdateMeetingRequest,@AuthenticationPrincipal CustomUserDetails userDetails){
         Map<String, String> succesMap = new HashMap<>();
+        addUpdateMeetingRequest.setUserId(userDetails.getUserId());
         succesMap.put("result",meetingService.updateMeeting(addUpdateMeetingRequest));
         return succesMap;
     }

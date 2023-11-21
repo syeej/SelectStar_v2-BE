@@ -14,11 +14,12 @@ import lombok.NoArgsConstructor;
 public class ApplyCheckResponse {
     int reject;
     String reason;
-
+    String rejectReason;
     public static ApplyCheckResponse fromEntity(Apply apply){
         return ApplyCheckResponse.builder()
                 .reject(apply.getReject())
                 .reason(apply.getReason())
+                .rejectReason(apply.getRejectReason())
                 .build();
     }
 
