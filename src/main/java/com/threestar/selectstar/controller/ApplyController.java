@@ -2,7 +2,6 @@ package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.domain.service.ApplyService;
-import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.apply.request.ApplyRequest;
 import com.threestar.selectstar.dto.apply.request.RejectApplyRequest;
 import com.threestar.selectstar.dto.apply.response.ApplyCheckResponse;

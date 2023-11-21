@@ -2,7 +2,6 @@ package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.domain.service.MeetingService;
-import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import com.threestar.selectstar.dto.meeting.request.CompleteRequest;
 import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
@@ -26,11 +25,10 @@ import java.util.Map;
 public class MeetingController {
     final MeetingService meetingService;
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    private final MypageService mypageService;
 
-    public MeetingController(MeetingService meetingService, MypageService mypageService) {
+
+    public MeetingController(MeetingService meetingService) {
         this.meetingService = meetingService;
-        this.mypageService = mypageService;
     }
 
 
