@@ -88,7 +88,7 @@ public class UserService {
 		}else {
 			User userE = userO.get();
 			//기본 이미지
-			//String encodeImg = "/image/global/userdefaultimg.png";
+
 			String encodeImg = "";
 			byte[] imgByte = userE.getProfilePhoto();
 			//유저 이미지 있으면 변환

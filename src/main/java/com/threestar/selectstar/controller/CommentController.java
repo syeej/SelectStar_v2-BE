@@ -3,7 +3,6 @@ package com.threestar.selectstar.controller;
 import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.domain.service.CommentService;
 import com.threestar.selectstar.domain.service.MeetingService;
-import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.comment.request.AddCommentRequest;
 import com.threestar.selectstar.dto.comment.response.FindCommentResponse;
 import org.springframework.data.domain.Page;
@@ -22,12 +21,10 @@ public class CommentController {
     final
     MeetingService meetingService;
     final CommentService commentService;
-    private final MypageService mypageService;
 
-    public CommentController(MeetingService meetingService, CommentService commentService, MypageService mypageService) {
+    public CommentController(MeetingService meetingService, CommentService commentService) {
         this.meetingService = meetingService;
         this.commentService = commentService;
-        this.mypageService = mypageService;
     }
     // => 삭제 상태 조회로 변경 할 것...
     @GetMapping("/meeting/{meetingId}")
