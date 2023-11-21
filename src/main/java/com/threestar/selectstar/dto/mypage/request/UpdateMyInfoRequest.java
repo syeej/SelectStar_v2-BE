@@ -1,10 +1,8 @@
 package com.threestar.selectstar.dto.mypage.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.threestar.selectstar.domain.entity.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -12,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateMyInfoRequest {
     //이력관리
-    private int userId;
+    private Integer userId;
     private String name;
     private String aboutMe;
     private String profileContent;
