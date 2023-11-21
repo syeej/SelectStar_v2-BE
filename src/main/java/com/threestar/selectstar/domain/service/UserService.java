@@ -39,33 +39,33 @@ public class UserService {
 		User savedUser = userRepository.save(user);
 		return savedUser.getUserId();
 	}
+
+	// 중복 확인
+	@Transactional(readOnly = true)
 	public void checkDuplicate(String type, String value) {
 		switch (type) {
 			case "name":
-				checkDuplicateName(value);
+				userRepository.findByName(value)
+						.ifPresent(u -> {
+							throw new IllegalStateException("이미 존재하는 아이디입니다.");
+						});
 				break;
 			case "nickname":
-				checkDuplicateNickname(value);
+				userRepository.findByNickname(value)
+						.ifPresent(u -> {
+							throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+						});
 				break;
 		}
 	}
 
-	private void checkDuplicateName(String name) {
-		User user = userRepository.findByName(name);
-//		userRepository.findByName(name)
-//			.ifPresent(u -> {
-//				throw new IllegalStateException("이미 존재하는 아이디입니다.");
-//			});
-	}
-	private void checkDuplicateNickname(String nickname) {
-		userRepository.findByNickname(nickname)
+	// 로그인
+	@Transactional(readOnly = true)
+	public void loginUser(GetUserRequest request){
+		userRepository.findByNameAndPassword(request.getName(), request.getPassword())
 				.ifPresent(u -> {
-					throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+					throw new IllegalStateException("아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.");
 				});
-	}
-
-	public Optional<User> loginUser(GetUserRequest request){
-		return userRepository.findByNameAndPassword(request.getName(), request.getPassword());
 	}
 
 	// 회원 검색

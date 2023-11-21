@@ -51,7 +51,7 @@ public class SpringSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer configure() {
-        return (web -> web.ignoring().requestMatchers("/search/**"));
+        return (web -> web.ignoring().requestMatchers("/search/**", "/users/checkDuplicate"));
     }
 
     @Bean
