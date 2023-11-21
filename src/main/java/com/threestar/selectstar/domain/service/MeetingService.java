@@ -88,7 +88,11 @@ public class MeetingService {
 		Meeting entity = meetingRepository.findById(meetingId).orElseThrow(IllegalArgumentException::new);
 		entity.setViews(entity.getViews() + 1);
 		return meetingRepository.findById(meetingId).
-			map(meeting -> FindMeetingOneResponse.fromEntity(meeting, meeting.getUser().getNickname()))
+			map(meeting -> FindMeetingOneResponse.fromEntity(meeting,
+							meeting.getUser().getNickname(),
+					meeting.getUser().getAboutMe(),
+					applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0),
+					null))
 			.orElse(null);
 	}
 

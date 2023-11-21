@@ -2,6 +2,7 @@ package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.domain.service.MeetingService;
+import com.threestar.selectstar.domain.service.UserService;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import com.threestar.selectstar.dto.meeting.request.CompleteRequest;
 import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
@@ -24,11 +25,13 @@ import java.util.Map;
 @RequestMapping("/meeting")
 public class MeetingController {
     final MeetingService meetingService;
+    final UserService userService;
     final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 
-    public MeetingController(MeetingService meetingService) {
+    public MeetingController(MeetingService meetingService, UserService userService) {
         this.meetingService = meetingService;
+        this.userService = userService;
     }
 
 
@@ -44,6 +47,7 @@ public class MeetingController {
         FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
         if (userDetails != null){
         meetingOne.setLoginId(userDetails.getUserId());
+        meetingOne.setImg(userService.getUserProfile(meetingOne.getUserId()).getProfilePhoto());
         }
         return ResponseEntity.ok()
                 .body(meetingOne);
