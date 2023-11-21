@@ -1,10 +1,7 @@
 package com.threestar.selectstar.dto.meeting.response;
 
 import com.threestar.selectstar.domain.entity.Meeting;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.sql.Date;
 
@@ -17,6 +14,7 @@ import java.sql.Date;
 @AllArgsConstructor
 public class FindMeetingOneResponse {
     private Integer meetingId;
+    private Integer userId;
     private String userNickname;
     private String description;
     private String title;
@@ -31,10 +29,13 @@ public class FindMeetingOneResponse {
     private String interestLanguage;
     private String interestFramework;
     private String interestJob;
+    @Setter
+    private Integer loginId;
 
     public static FindMeetingOneResponse fromEntity(Meeting meeting, String nickname){
         return FindMeetingOneResponse.builder()
                 .meetingId(meeting.getMeetingId())
+                .userId(meeting.getUser().getUserId())
                 .userNickname(nickname)
                 .description(meeting.getDescription())
                 .title(meeting.getTitle())

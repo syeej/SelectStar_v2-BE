@@ -1,18 +1,19 @@
 package com.threestar.selectstar.controller;
 
+import com.threestar.selectstar.config.auth.CustomUserDetails;
 import com.threestar.selectstar.domain.service.CommentService;
 import com.threestar.selectstar.domain.service.MeetingService;
+import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.comment.request.AddCommentRequest;
 import com.threestar.selectstar.dto.comment.response.FindCommentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RestController
@@ -21,13 +22,14 @@ public class CommentController {
     final
     MeetingService meetingService;
     final CommentService commentService;
+    private final MypageService mypageService;
 
-    public CommentController(MeetingService meetingService, CommentService commentService) {
+    public CommentController(MeetingService meetingService, CommentService commentService, MypageService mypageService) {
         this.meetingService = meetingService;
         this.commentService = commentService;
+        this.mypageService = mypageService;
     }
     // => 삭제 상태 조회로 변경 할 것...
-    @CrossOrigin(originPatterns = {"http://localhost:5173"})
     @GetMapping("/meeting/{meetingId}")
     public ResponseEntity<Page<FindCommentResponse>> commentListByMeetingId(@PathVariable int meetingId,@RequestParam(defaultValue = "0") int page){
         return ResponseEntity.ok()
@@ -42,8 +44,9 @@ public class CommentController {
     // 글 등록
     // return new ResponseEntity<>(response, HttpStatus.CREATED) 로 수정 해야 함
     @PostMapping("/meeting/{meetingId}")
-    public Map<String, String> addComment(@PathVariable int meetingId,@RequestBody AddCommentRequest addCommentRequest){
+    public Map<String, String> addComment(@PathVariable int meetingId,@RequestBody AddCommentRequest addCommentRequest, @AuthenticationPrincipal CustomUserDetails userDetails){
         Map<String, String> succesMap = new HashMap<>();
+        addCommentRequest.setUserId(userDetails.getUserId());
         addCommentRequest.setMeetingId(meetingId);
         succesMap.put("result",commentService.addComment(addCommentRequest));
         return succesMap;
@@ -55,7 +58,4 @@ public class CommentController {
         succesMap.put("result",commentService.removeComment(commentId));
         return succesMap;
     }
-
-
-
 }
