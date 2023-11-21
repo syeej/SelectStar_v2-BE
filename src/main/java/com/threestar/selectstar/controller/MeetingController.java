@@ -1,18 +1,16 @@
 package com.threestar.selectstar.controller;
 
 import com.threestar.selectstar.config.auth.CustomUserDetails;
-import com.threestar.selectstar.config.jwt.JwtService;
 import com.threestar.selectstar.domain.service.MeetingService;
 import com.threestar.selectstar.domain.service.MypageService;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
+import com.threestar.selectstar.dto.meeting.request.CompleteRequest;
 import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,9 +42,13 @@ public class MeetingController {
     }
     // 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") int id){
+    public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") int id,@AuthenticationPrincipal CustomUserDetails userDetails){
+        FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
+        if (userDetails != null){
+        meetingOne.setLoginId(userDetails.getUserId());
+        }
         return ResponseEntity.ok()
-                .body(meetingService.findMeetingOne(id));
+                .body(meetingOne);
     }
     // 등록
     @PostMapping
@@ -74,7 +76,19 @@ public class MeetingController {
         succesMap.put("result",meetingService.updateMeeting(addUpdateMeetingRequest));
         return succesMap;
     }
-    // 삭제
+    // 모집 완료
+    @PatchMapping
+    public Map<String,String> meetingComplete(@RequestBody CompleteRequest completeRequest, @AuthenticationPrincipal CustomUserDetails userDetails){
+        Map<String, String> succesMap = new HashMap<>();
+        try {
+            // 삭제 조건 추가
+            succesMap.put("result", meetingService.completeMeeting(completeRequest));
+        } catch(Exception e) {
+            succesMap.put("result", "fail");
+        }
+        return succesMap;
+    }
+    
     @DeleteMapping("/{id}")
     public Map<String,String> meetingRemove(@PathVariable("id") int id){
         Map<String, String> succesMap = new HashMap<>();

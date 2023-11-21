@@ -1,10 +1,10 @@
 package com.threestar.selectstar.domain.service;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.threestar.selectstar.domain.entity.Meeting;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
+import com.threestar.selectstar.dto.meeting.request.CompleteRequest;
 import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
 import com.threestar.selectstar.dto.meeting.response.FindMeetingOneResponse;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
@@ -127,7 +127,16 @@ public class MeetingService {
 			return e.getMessage();
 		}
 	}
-
+	@Transactional
+	public String completeMeeting(CompleteRequest completeRequest){
+		try {
+			meetingRepository.findById(completeRequest.getMeetingId()).orElseThrow(IllegalArgumentException::new)
+					.setStatus(1);
+			return "success";
+		} catch (Exception e){
+			return e.getMessage();
+		}
+	}
 	//내가 작성한 글 목록 조회[마이페이지]
 	public List<GetMyMeetingListResponse> getMyMeetingList(int uId){
 		List<Meeting> myMeetingList = meetingRepository.findByUser_UserIdIsAndDeletedIs(uId, 0);
