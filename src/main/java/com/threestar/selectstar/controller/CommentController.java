@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/comment")
 public class CommentController {

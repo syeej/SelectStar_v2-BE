@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,8 @@ import java.sql.Date;
 import java.util.List;
 
 @Repository
-public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
+public interface MeetingRepository extends JpaRepository<Meeting, Integer>, QuerydslPredicateExecutor<Meeting> {
+
 	// 삭제 안 된 전체 게시물 리스트 조회
 	Page<Meeting> findByDeletedIs(int isDelete, Pageable pageable);
 
@@ -33,15 +35,15 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
 	List<Meeting> findByTitleLikeAndDeletedIsOrderByCreationDateDesc(String like, int deleted);
 
 	// 모임글 검색 - 필터 적용
-	@Query("SELECT m FROM Meeting m WHERE m.title LIKE %:searchWord% AND m.deleted = :deleted "
+	/*@Query("SELECT m FROM Meeting m WHERE m.title LIKE %:searchWord% AND m.deleted = :deleted "
 		+ "AND (:category IS NULL OR m.category IN :category) "
-		+ "AND (:languages IS NULL OR m.interestLanguage IN :languages) "
-		+ "AND (:frameworks IS NULL OR m.interestFramework IN :frameworks) "
-		+ "AND (:jobs IS NULL OR m.interestJob IN :jobs) "
+		+ "AND (:languages IS NULL OR m.interestLanguage LIKE %:languages%) "
+		+ "AND (:frameworks IS NULL OR m.interestFramework LIKE %:frameworks%) "
+		+ "AND (:jobs IS NULL OR m.interestJob LIKE %:jobs%) "
 		+ "ORDER BY m.creationDate DESC")
 	List<Meeting> findBySearchFilter(@Param("searchWord") String searchWord, @Param("deleted") int deleted,
-		@Param("category") List<Integer> category, @Param("languages") List<String> languages,
-		@Param("frameworks") List<String> frameworks, @Param("jobs") List<String> jobs);
+		@Param("category") List<Integer> category, @Param("languages") Integer languages,
+		@Param("frameworks") Integer frameworks, @Param("jobs") Integer jobs);*/
 	// 내가 작성한 글 목록
 	List<Meeting> findByUser_UserIdIsAndDeletedIs(Integer user_userId, int deleted);
 
