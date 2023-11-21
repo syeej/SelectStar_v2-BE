@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -49,6 +50,11 @@ public class SpringSecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer configure() {
+        return (web -> web.ignoring().requestMatchers("/search/**"));
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpsecurity) throws Exception {
         httpsecurity
                     .addFilter(corsConfig.corsFilter()) // Spring Security 사용시 CORS 설정을 하기 위해서 Authentication Filter 인증보다 앞에 필터를 추가
@@ -62,10 +68,10 @@ public class SpringSecurityConfig {
                     // JWT 인증 및 인가 필터를 추가
                     .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터
                     .addFilter(jwtAuthorizationFilter())  // JWT 인가 필터
-                
+
                 // 요청에 대한 권한 설정
                 .authorizeHttpRequests(authorize -> authorize  // authorizeRequests() : deprecated로 authorizeHttpRequest() 사용
-                    .requestMatchers("/","/meeting","/users/**" ,"/login","/rankMeeting").permitAll()  // 인증 필요 없음
+                    .requestMatchers("/","/meeting","/apply/**","/meeting/**","/comment/meeting/**","/users/**" ,"/login","/rankMeeting").permitAll()  // 인증 필요 없음
 //                    .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자 구현 예정
                     .anyRequest().authenticated()  // 나머지는 인증 필요
                 );

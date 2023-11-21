@@ -15,7 +15,6 @@ import com.threestar.selectstar.domain.service.MeetingService;
 import com.threestar.selectstar.domain.service.UserService;
 import com.threestar.selectstar.dto.meeting.response.FindMainPageResponse;
 import com.threestar.selectstar.dto.user.response.GetUsersListResponse;
-@CrossOrigin(originPatterns = {"http://localhost:5173","http://localhost:63342"})
 @RestController
 public class HomeController {
 
@@ -29,7 +28,7 @@ public class HomeController {
 
 	// 검색 (제목)
 	@GetMapping("/search")
-	public ResponseEntity<List<Object>> searchResult(@RequestParam("q") String searchWord) {
+	public ResponseEntity<List<Object>> searchResult(@RequestParam("searchWord") String searchWord) {
 		List<Object> searchResult = new ArrayList<>();
 
 		// 모임 검색
@@ -46,11 +45,11 @@ public class HomeController {
 	// 검색 (모임글 필터링)
 	@GetMapping("/search/filter")
 	public ResponseEntity<List<FindMainPageResponse>> searchMeetingWithFilter(
-		@RequestParam("q") String searchWord,
+		@RequestParam("searchWord") String searchWord,
 		@RequestParam(name = "category", required = false) List<Integer> category,
-		@RequestParam(name = "languages", required = false) List<String> languages,
-		@RequestParam(name = "frameworks", required = false) List<String> frameworks,
-		@RequestParam(name = "jobs", required = false) List<String> jobs){
+		@RequestParam(name = "languages", required = false) List<Integer> languages,
+		@RequestParam(name = "frameworks", required = false) List<Integer> frameworks,
+		@RequestParam(name = "jobs", required = false) List<Integer> jobs){
 
 		List<FindMainPageResponse> searchResult = meetingService.searchMeetingWithFilter(searchWord, category, languages, frameworks, jobs);
 

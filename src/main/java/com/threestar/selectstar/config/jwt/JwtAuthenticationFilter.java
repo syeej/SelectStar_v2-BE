@@ -94,6 +94,8 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 				.withClaim("userId", principalDetails.getUser().getUserId())  //  사용자 정의 클레임 - userId(사용자 번호) 추가함 (토큰을 검증할 때 사용할 수 있음)
 				.sign(Algorithm.HMAC512(SECRET_KEY));  // 서명 단계 (지정된 알고리즘과 시크릿 키 사용)
 
+
+
 		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);  // 생성된 JWT 토큰을 HTTP 응답 헤더에 추가
 	}
 
