@@ -47,22 +47,25 @@ public class MypageController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    //마이 페이지-이력 관리 수정
+    //마이페이지-이력관리 수정
     @PatchMapping("/users/profile")
     @ResponseBody
-    public Map<String, String> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                               @RequestBody UpdateMyInfoRequest userReq){
-        int uId = userDetails.getUserId();
-        log.info("myprofile 수정 userId 찾기1  >>"+uId);
+    public ResponseEntity<?> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                               @RequestBody UpdateMyInfoRequest userReq) {
+        try {
+            int uId = userDetails.getUserId();
+            log.info("myprofile 수정 userId 찾기1  >>" + uId);
 
-        Map<String, String> map = new HashMap<>();
-        //String res = mypageService.updateMyProfileInfo(id, userReq);
-        map.put("result", userService.updateMyProfileInfo(uId, userReq));
-        log.info("update myProfileInfo res>> "+map.get("result"));
-        if(map.get("result").equals("success")){
-            return map;
-        }else{
-            return null;
+            String res = userService.updateMyProfileInfo(uId, userReq);
+            log.info("update myProfileInfo res>> " + res);
+            if (res.equals("success")) {
+                return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+            } else {
+                throw new UserNotFoundException(res);
+            }
+        } catch (UserNotFoundException unfe) {
+            log.error(unfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
     }
 
@@ -83,15 +86,20 @@ public class MypageController {
     @ResponseBody
     public ResponseEntity<?> updateMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
                                           @RequestBody UpdateMyInfoRequest req){
-        int uId = userDetails.getUserId();
-        log.info("myinfo 수정 userId 찾기1  >>"+uId);
+        try {
+            int uId = userDetails.getUserId();
+            log.info("myinfo 수정 userId 찾기1  >>" + uId);
 
-        String res = userService.updateMyInfo(uId, req);
-        log.info("update myProfileInfo res>> "+res);
-        if(res.equals("success")){
-            return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
-        }else{
-            throw new UserNotFoundException(res);
+            String res = userService.updateMyInfo(uId, req);
+            log.info("update myProfileInfo res>> " + res);
+            if (res.equals("success")) {
+                return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+            } else {
+                throw new UserNotFoundException(res);
+            }
+        }catch (UserNotFoundException unfe){
+            log.error(unfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
     }
     //내가 작성한 글 목록 조회
@@ -188,18 +196,21 @@ public class MypageController {
     @ResponseBody
     public ResponseEntity<?> updateMyImg(@AuthenticationPrincipal CustomUserDetails userDetails,
                                          @RequestPart(name = "profilePhoto") MultipartFile file){
-
-        int uId = userDetails.getUserId();
-        log.info("myinfo 수정 userId 찾기1  >>"+uId);
-
-        //log.info("file check  >>"+file);
-        UserImgFileDTO filedto = new UserImgFileDTO(file);
-        String res = userService.updateMyProfileImg(uId, filedto);
-        //log.info("update myProfileInfo res>> "+res);
-        if(res.equals("success")){
-            return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
-        }else{
-            throw new UserNotFoundException(res);
+        try {
+            int uId = userDetails.getUserId();
+            log.info("profile 이미지 수정 userId 찾기1  >>" + uId);
+            //log.info("file check  >>"+file);
+            UserImgFileDTO filedto = new UserImgFileDTO(file);
+            String res = userService.updateMyProfileImg(uId, filedto);
+            //log.info("update myProfileInfo res>> "+res);
+            if (res.equals("success")) {
+                return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+            } else {
+                throw new UserNotFoundException(res);
+            }
+        }catch (UserNotFoundException unfe){
+            log.error(unfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
     }
 }
