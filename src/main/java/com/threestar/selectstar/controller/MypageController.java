@@ -198,7 +198,7 @@ public class MypageController {
                                          @RequestPart(name = "profilePhoto") MultipartFile file){
         try {
             int uId = userDetails.getUserId();
-            log.info("myinfo 수정 userId 찾기1  >>" + uId);
+            log.info("profile 이미지 수정 userId 찾기1  >>" + uId);
             //log.info("file check  >>"+file);
             UserImgFileDTO filedto = new UserImgFileDTO(file);
             String res = userService.updateMyProfileImg(uId, filedto);

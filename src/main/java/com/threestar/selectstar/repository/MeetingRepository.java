@@ -4,6 +4,7 @@ import com.threestar.selectstar.domain.entity.Meeting;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -47,6 +48,9 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, Quer
 	// 내가 작성한 글 목록
 	List<Meeting> findByUser_UserIdIsAndDeletedIs(Integer user_userId, int deleted);
 
+	// 내가 작성한 글 목록(최신순)
+	List<Meeting> findByUser_UserIdIsAndDeletedIs(Integer user_userId, int deleted, Sort sort);
+
 	// 내가 작성한 글목록 조회(카테고리별)
 	List<Meeting> findByUser_UserIdIsAndDeletedIsAndCategoryIs(Integer user_userId, int deleted, int category);
 
@@ -76,4 +80,5 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, Quer
     @Query("select m, a from Meeting m join Apply a on m.meetingId = a.applyID.meeting.meetingId " +
             "where a.applyID.user.userId=:uid and m.deleted=:mds and m.category=:cate and m.status=:sts")
     public List<Meeting> getMyApplyingListByCateAndSts(@Param("uid") int uid, @Param("mds") int mds, @Param("cate") int cate, @Param("sts") int sts);
+
 }
