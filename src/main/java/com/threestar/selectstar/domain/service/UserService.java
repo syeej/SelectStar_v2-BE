@@ -1,5 +1,6 @@
 package com.threestar.selectstar.domain.service;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +73,7 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public List<GetUsersListResponse> searchUser(String searchWord) {
 		List<User> searchUser = userRepository.findByNicknameLike("%"+searchWord+"%");
+
 		return searchUser.stream()
 			.map(GetUsersListResponse::fromEntity)
 			.collect(Collectors.toList());
