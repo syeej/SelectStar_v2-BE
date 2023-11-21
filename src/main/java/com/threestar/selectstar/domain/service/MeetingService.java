@@ -1,5 +1,8 @@
 package com.threestar.selectstar.domain.service;
 
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.threestar.selectstar.domain.entity.Meeting;
 import com.threestar.selectstar.dto.meeting.request.AddUpdateMeetingRequest;
 import com.threestar.selectstar.dto.meeting.request.FindMainPageRequest;
@@ -25,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.threestar.selectstar.domain.entity.QMeeting.meeting;
+
 @Slf4j
 @Service
 public class MeetingService {
@@ -33,13 +38,15 @@ public class MeetingService {
 	final UserRepository userRepository;
 	final CommentRepository commentRepository;
 	final ApplyRepository applyRepository;
+	final JPAQueryFactory jpaQueryFactory;
 
 	public MeetingService(MeetingRepository meetingRepository, UserRepository userRepository,
-		CommentRepository commentRepository, ApplyRepository applyRepository) {
+						  CommentRepository commentRepository, ApplyRepository applyRepository, JPAQueryFactory jpaQueryFactory) {
 		this.meetingRepository = meetingRepository;
 		this.userRepository = userRepository;
 		this.commentRepository = commentRepository;
 		this.applyRepository = applyRepository;
+		this.jpaQueryFactory = jpaQueryFactory;
 	}
 
 	// 미팅 페이지를 조회한다.
@@ -210,16 +217,95 @@ public class MeetingService {
 	}
 
 	// 모임글 검색 - 필터링
-	@Transactional(readOnly = true)
+/*	@Transactional(readOnly = true)
 	public List<FindMainPageResponse> searchMeetingWithFilter(
-		String searchWord, List<Integer> category, List<String> languages, List<String> frameworks, List<String> jobs) {
+		String searchWord, List<Integer> category, List<Integer> languages, List<Integer> frameworks, List<Integer> jobs) {
+		List<Meeting> searchMeeting = new ArrayList<>();
+		for(Integer lang : languages){
+			for(Integer fw : frameworks){
+				for(Integer job : jobs){
+					searchMeeting.addAll(meetingRepository.findBySearchFilter(searchWord, 0, category, lang, fw, job));
+				}
+			}
+		}
 
-		List<Meeting> searchMeeting = meetingRepository.findBySearchFilter(searchWord, 0, category, languages, frameworks, jobs);
+//		List<Meeting> meetings = meetingRepository.findBySearchFilter(searchWord, 0, category, languages, frameworks, jobs);
 		return searchMeeting.stream()
 			.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId())))
 			.collect(Collectors.toList());
+	}*/
+	@Transactional(readOnly = true)
+	public List<FindMainPageResponse> searchMeetingWithFilter(String searchWord, List<Integer> category, List<Integer> languages, List<Integer> frameworks, List<Integer> jobs) {
+		List<Meeting> searchMeeting = jpaQueryFactory.selectFrom(meeting)
+				.where(
+						meeting.title.containsIgnoreCase(searchWord),  // 제목에 검색어가 포함되어 있는지 (대소문자 구분 없이)
+						meeting.deleted.eq(0),  // 삭제되지 않은(deleted = 0) 데이터만 검색
+						searchCategoryCondition(category),
+						searchLanguagesCondition(languages),
+						searchFrameworksCondition(frameworks),
+						searchJobsCondition(jobs)
+				)
+				.orderBy(meeting.creationDate.desc())
+				.fetch();  // fetch()를 통해 검색 결과를 가져옴
+
+		return searchMeeting.stream()
+				.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId())))
+				.collect(Collectors.toList());
 	}
-    //내가 신청한 글 목록 조회[마이페이지]
+	// BooleanExpression : QueryDsl에서 제공하는 논리적인 조건을 표현하는 타입
+	// 각 메소드에서는 입력으로 받은 리스트가 null이 아닐 경우, 해당 리스트의 각 항목에 대해 meeting의 특정 필드가 해당 항목을 포함하고 있는지를 검사하는 BooleanExpression를 생성하고 이를 반환한다.
+	// 만약 입력 리스트가 null일 경우, null을 반환
+	private BooleanExpression searchCategoryCondition(List<Integer> category) {
+		return category != null ? meeting.category.in(category) : null;
+	}
+
+	private BooleanExpression searchLanguagesCondition(List<Integer> languages) {
+		if (languages != null) {
+			BooleanExpression result = null;
+			for (Integer language : languages) {
+				if (result == null) {
+					result = meeting.interestLanguage.contains(String.valueOf(language));
+				} else {
+					result = result.or(meeting.interestLanguage.contains(String.valueOf(language)));
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+
+	private BooleanExpression searchFrameworksCondition(List<Integer> frameworks) {
+		if (frameworks != null) {
+			BooleanExpression result = null;
+			for (Integer framework : frameworks) {
+				if (result == null) {
+					result = meeting.interestFramework.contains(String.valueOf(framework));
+				} else {
+					result = result.or(meeting.interestFramework.contains(String.valueOf(framework)));
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+
+	private BooleanExpression searchJobsCondition(List<Integer> jobs) {
+		if (jobs != null) {
+			BooleanExpression result = null;
+			for (Integer job : jobs) {
+				if (result == null) {
+					result = meeting.interestJob.contains(String.valueOf(job));
+				} else {
+					result = result.or(meeting.interestJob.contains(String.valueOf(job)));
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+
+
+	//내가 신청한 글 목록 조회[마이페이지]
     public List<GetMyApplyingListResponse> getMyApplyingList(int uId){
 
         List<Meeting> myApplyingList = meetingRepository.getMyApplyingList(uId, 0);
