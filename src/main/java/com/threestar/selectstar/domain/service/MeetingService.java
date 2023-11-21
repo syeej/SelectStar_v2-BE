@@ -139,7 +139,9 @@ public class MeetingService {
 	}
 	//내가 작성한 글 목록 조회[마이페이지]
 	public List<GetMyMeetingListResponse> getMyMeetingList(int uId){
-		List<Meeting> myMeetingList = meetingRepository.findByUser_UserIdIsAndDeletedIs(uId, 0);
+		//최신순 정렬
+		Sort descSort = Sort.by(Sort.Direction.DESC, "creationDate");
+		List<Meeting> myMeetingList = meetingRepository.findByUser_UserIdIsAndDeletedIs(uId, 0, descSort);
 		//log.info("meetinglist entity  >>"+myMeetingList);
 		if(myMeetingList.isEmpty()){
 			return null;

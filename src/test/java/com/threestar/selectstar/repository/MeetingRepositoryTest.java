@@ -390,4 +390,5 @@ class MeetingRepositoryTest {
         applyingList.stream().forEach(System.out::println);
 
     }
+
 }
