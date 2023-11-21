@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Arrays;
+import java.util.Base64;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,12 +20,21 @@ public class GetUsersListResponse {
 	private int userId;
 	private String nickname;
 	private String aboutMe;
+	private String profilePhoto;
 
 	public static GetUsersListResponse fromEntity(User user){
+		String encodeImg = "";
+		byte[] imgByte = user.getProfilePhoto();
+
+		if (user.getProfilePhoto() != null) {
+			encodeImg = "data:image/png;base64," + Base64.getEncoder().encodeToString(imgByte);
+		}
+
 		return GetUsersListResponse.builder()
-			.userId(user.getUserId())
-			.nickname(user.getNickname())
-			.aboutMe(user.getAboutMe())
-			.build();
+				.userId(user.getUserId())
+				.nickname(user.getNickname())
+				.aboutMe(user.getAboutMe())
+				.profilePhoto(encodeImg)
+				.build();
 	}
 }
