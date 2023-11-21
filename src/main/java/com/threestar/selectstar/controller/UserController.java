@@ -68,11 +68,12 @@ public class UserController {
 	// 로그인
 	@PostMapping("/login")
 	public ResponseEntity<String> processLogin(@RequestBody GetUserRequest request){
-		Optional<User> loginUser = userService.loginUser(request);
-		if(loginUser.isPresent()){
-			return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
+		try {
+			userService.loginUser(request);
+			return ResponseEntity.ok("로그인 성공");
+		} catch (Exception e){
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-        return new ResponseEntity<>("로그인 실패", HttpStatus.NOT_FOUND);
     }
 
 /*	@GetMapping("/logout")
