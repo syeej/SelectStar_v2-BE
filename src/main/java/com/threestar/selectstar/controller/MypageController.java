@@ -48,21 +48,47 @@ public class MypageController {
     }
 
     //마이 페이지-이력 관리 수정
-    @PatchMapping("/users/profile")
+    /*@PatchMapping("/users/profile")
     @ResponseBody
     public Map<String, String> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                               @RequestBody UpdateMyInfoRequest userReq){
-        int uId = userDetails.getUserId();
-        log.info("myprofile 수정 userId 찾기1  >>"+uId);
+                                               @RequestBody UpdateMyInfoRequest userReq) {
+        try {
+            int uId = userDetails.getUserId();
+            log.info("myprofile 수정 userId 찾기1  >>" + uId);
 
-        Map<String, String> map = new HashMap<>();
-        //String res = mypageService.updateMyProfileInfo(id, userReq);
-        map.put("result", userService.updateMyProfileInfo(uId, userReq));
-        log.info("update myProfileInfo res>> "+map.get("result"));
-        if(map.get("result").equals("success")){
-            return map;
-        }else{
+            Map<String, String> map = new HashMap<>();
+            //String res = mypageService.updateMyProfileInfo(id, userReq);
+            map.put("result", userService.updateMyProfileInfo(uId, userReq));
+            log.info("update myProfileInfo res>> " + map.get("result"));
+            if (map.get("result").equals("success")) {
+                return map;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
             return null;
+        }
+    }*/
+
+    @PatchMapping("/users/profile")
+    @ResponseBody
+    public ResponseEntity<?> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                               @RequestBody UpdateMyInfoRequest userReq) {
+        try {
+            int uId = userDetails.getUserId();
+            log.info("myprofile 수정 userId 찾기1  >>" + uId);
+
+            String res = userService.updateMyProfileInfo(uId, userReq);
+            log.info("update myProfileInfo res>> " + res);
+            if (res.equals("success")) {
+                return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+            } else {
+                throw new UserNotFoundException(res);
+            }
+        } catch (UserNotFoundException unfe) {
+            log.error(unfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
     }
 
@@ -83,15 +109,20 @@ public class MypageController {
     @ResponseBody
     public ResponseEntity<?> updateMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
                                           @RequestBody UpdateMyInfoRequest req){
-        int uId = userDetails.getUserId();
-        log.info("myinfo 수정 userId 찾기1  >>"+uId);
+        try {
+            int uId = userDetails.getUserId();
+            log.info("myinfo 수정 userId 찾기1  >>" + uId);
 
-        String res = userService.updateMyInfo(uId, req);
-        log.info("update myProfileInfo res>> "+res);
-        if(res.equals("success")){
-            return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
-        }else{
-            throw new UserNotFoundException(res);
+            String res = userService.updateMyInfo(uId, req);
+            log.info("update myProfileInfo res>> " + res);
+            if (res.equals("success")) {
+                return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+            } else {
+                throw new UserNotFoundException(res);
+            }
+        }catch (UserNotFoundException unfe){
+            log.error(unfe.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
     }
     //내가 작성한 글 목록 조회
