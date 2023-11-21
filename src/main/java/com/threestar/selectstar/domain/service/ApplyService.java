@@ -1,8 +1,12 @@
 package com.threestar.selectstar.domain.service;
 
+import com.threestar.selectstar.domain.entity.Apply;
 import com.threestar.selectstar.domain.entity.ApplyID;
 import com.threestar.selectstar.dto.apply.request.ApplyRequest;
+import com.threestar.selectstar.dto.apply.request.RejectApplyRequest;
+import com.threestar.selectstar.dto.apply.response.ApplyCheckResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByMeetingIdResponse;
+import com.threestar.selectstar.dto.apply.response.FindApplyByMeetingIdValidResponse;
 import com.threestar.selectstar.dto.apply.response.FindApplyByUserIdResponse;
 import com.threestar.selectstar.repository.ApplyRepository;
 import com.threestar.selectstar.repository.MeetingRepository;
@@ -40,8 +44,9 @@ public class ApplyService {
         }
     }
     // 지원 확인
-    public boolean checkApply(int userId, int meetingId) {
-        return applyRepository.existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(userId, meetingId);
+    public ApplyCheckResponse checkApply(int userId, int meetingId) {
+        return ApplyCheckResponse.fromEntity(applyRepository.findByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(userId, meetingId)
+                .orElseThrow(IllegalArgumentException::new));
         }
 
     // 내가 지원한 글들
@@ -57,6 +62,22 @@ public class ApplyService {
                 .stream().map(FindApplyByMeetingIdResponse::fromEntity)
                 .collect(Collectors.toList());
     }
+    // 거절 안 된 글에서 지원한 사람
+    public List<FindApplyByMeetingIdValidResponse> findApplyByMeetingIdValid(int meetingId) {
+        return applyRepository.findByApplyID_Meeting_MeetingIdIsAndRejectIs(meetingId,0)
+                .stream().map(FindApplyByMeetingIdValidResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+    // 거절 시키기
+    @Transactional
+    public String rejectApplyByUserIdAndMeetingId(RejectApplyRequest rejectApplyRequest){
+        Apply byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs = applyRepository.findByApplyID_Meeting_MeetingIdIsAndApplyID_User_UserIdIsAndRejectIs(rejectApplyRequest.getMeetingId()
+                , rejectApplyRequest.getUserId(), 0);
+        byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setReject(1);
+        byApplyIDMeetingMeetingIdIsAndApplyIDUserUserIdIsAndRejectIs.setRejectReason(rejectApplyRequest.getReason());
+        return "success";
+    }
+
 }
 
 
