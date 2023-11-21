@@ -47,6 +47,7 @@ public class MypageController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
+    //마이페이지-이력관리 수정
     @PatchMapping("/users/profile")
     @ResponseBody
     public ResponseEntity<?> updateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails,

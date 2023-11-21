@@ -1,12 +1,12 @@
 package com.threestar.selectstar.dto.user.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GetUserProfileResponse {
     //다른 유저의 이력 확인
     private int userId;
