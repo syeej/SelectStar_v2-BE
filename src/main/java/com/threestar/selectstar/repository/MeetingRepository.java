@@ -81,4 +81,6 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer>, Quer
             "where a.applyID.user.userId=:uid and m.deleted=:mds and m.category=:cate and m.status=:sts")
     public List<Meeting> getMyApplyingListByCateAndSts(@Param("uid") int uid, @Param("mds") int mds, @Param("cate") int cate, @Param("sts") int sts);
 
+	// 현재 시각 보다 만료 시간이 적은 만료 안된 리스트
+	public List<Meeting> findByStatusIsAndApplicationDeadlineLessThan(int status, Date applicationDeadline);
 }

@@ -19,11 +19,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -386,4 +388,19 @@ public class MeetingService {
             return dtoList;
         }
     }
+	@Scheduled(cron = "0 0 0 * * *")
+	@Transactional
+	public void meetingScheduling(){
+		try {
+			// 조회 => 시간이 지난 경우 상태 1로 변경
+			List<Meeting> byStatusIsAndApplicationDeadlineGreaterThanEqual = meetingRepository.findByStatusIsAndApplicationDeadlineLessThan(0, Date.valueOf(LocalDate.now()));
+			for (Meeting meetingOne:
+			byStatusIsAndApplicationDeadlineGreaterThanEqual) {
+				meetingOne.setStatus(1);
+			}
+			// for문으로  수정
+		} catch (Exception e){
+			System.out.println("스케줄링 에러");
+		}
+	}
 }
