@@ -2,7 +2,9 @@ package com.threestar.selectstar.dto.meeting.response;
 
 
 import com.threestar.selectstar.domain.entity.Meeting;
+import com.threestar.selectstar.repository.ApplyRepository;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Date;
 
@@ -28,7 +30,8 @@ public class FindMainPageResponse {
     private String interestFramework;
     private String interestJob;
 
-    public static FindMainPageResponse fromEntity(Meeting meeting,int commentCount){
+    public static FindMainPageResponse fromEntity(Meeting meeting,int commentCount, ApplyRepository applyRepository){
+        int applicationCount = applyRepository.countByApplyID_Meeting_MeetingIdIsAndRejectIs(meeting.getMeetingId(),0);
         return FindMainPageResponse.builder()
                 .meetingId(meeting.getMeetingId())
                 .userId(meeting.getUser().getUserId())
@@ -39,7 +42,7 @@ public class FindMainPageResponse {
                 .applicationDeadline(meeting.getApplicationDeadline())
                 .views(meeting.getViews())
                 .recruitmentCount(meeting.getRecruitmentCount())
-                .applicationCount(meeting.getApplicationCount())
+                .applicationCount(applicationCount)
                 .commentCount(commentCount)
                 .location(meeting.getLocation())
                 .creationDate(meeting.getCreationDate())

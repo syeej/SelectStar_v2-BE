@@ -19,11 +19,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +55,7 @@ public class MeetingService {
 	public Page<FindMainPageResponse> findMainPage(FindMainPageRequest findMainPageRequest) {
 		// 총 페이지 랑 페이지 리스트 반환
 		Pageable pageable;
+		Page<Meeting> byDeletedIsOrderByCreationDateDesc;
 		// 페이징 처리
 		if (findMainPageRequest.getOrder() != null) {
 			pageable = switch (findMainPageRequest.getOrder()) {
@@ -71,7 +74,6 @@ public class MeetingService {
 			pageable = PageRequest.of(findMainPageRequest.getPage(),
 				findMainPageRequest.getSize());
 		}
-		Page<Meeting> byDeletedIsOrderByCreationDateDesc;
 		if (findMainPageRequest.getCategory() == null)
 			byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIs(0,
 				pageable);
@@ -80,7 +82,8 @@ public class MeetingService {
 				findMainPageRequest.getCategory(),
 				pageable);
 		return byDeletedIsOrderByCreationDateDesc.map(entity -> FindMainPageResponse.fromEntity(entity,
-			commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId())));
+			commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId()),
+				applyRepository));
 	}
 	@Transactional
 	public FindMeetingOneResponse findMeetingOne(int meetingId){
@@ -218,7 +221,8 @@ public class MeetingService {
 		Page<Meeting> topMeetings = meetingRepository.findByDeletedIsAndCreationDateIsGreaterThanEqual(0, Date.valueOf(weekAgo), pageable);
 
 		return topMeetings.map(entity -> FindMainPageResponse.fromEntity(entity,
-				commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId())));
+				commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId()),
+				applyRepository));
 	}
 
 	// 모임글 검색 - 제목만
@@ -227,7 +231,7 @@ public class MeetingService {
 		List<Meeting> searchMeeting = meetingRepository.findByTitleLikeAndDeletedIsOrderByCreationDateDesc("%" + searchWord + "%", 0);
 
 		return searchMeeting.stream()
-			.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId())))
+			.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId()),applyRepository))
 			.collect(Collectors.toList());
 	}
 
@@ -264,7 +268,7 @@ public class MeetingService {
 				.fetch();  // fetch()를 통해 검색 결과를 가져옴
 
 		return searchMeeting.stream()
-				.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId())))
+				.map(meeting -> FindMainPageResponse.fromEntity(meeting, commentRepository.countByMeeting_MeetingIdIs(meeting.getMeetingId()),applyRepository))
 				.collect(Collectors.toList());
 	}
 	// BooleanExpression : QueryDsl에서 제공하는 논리적인 조건을 표현하는 타입
@@ -386,4 +390,19 @@ public class MeetingService {
             return dtoList;
         }
     }
+	@Scheduled(cron = "0 0 0 * * *")
+	@Transactional
+	public void meetingScheduling(){
+		try {
+			// 조회 => 시간이 지난 경우 상태 1로 변경
+			List<Meeting> byStatusIsAndApplicationDeadlineGreaterThanEqual = meetingRepository.findByStatusIsAndApplicationDeadlineLessThan(0, Date.valueOf(LocalDate.now()));
+			for (Meeting meetingOne:
+			byStatusIsAndApplicationDeadlineGreaterThanEqual) {
+				meetingOne.setStatus(1);
+			}
+			// for문으로  수정
+		} catch (Exception e){
+			System.out.println("스케줄링 에러");
+		}
+	}
 }
