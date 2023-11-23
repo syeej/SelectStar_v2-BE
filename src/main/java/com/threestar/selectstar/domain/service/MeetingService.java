@@ -81,7 +81,8 @@ public class MeetingService {
 			byDeletedIsOrderByCreationDateDesc = meetingRepository.findByDeletedIsAndCategoryIs(0,
 				findMainPageRequest.getCategory(),
 				pageable);
-		return byDeletedIsOrderByCreationDateDesc.map(entity -> FindMainPageResponse.fromEntity(entity,
+		return byDeletedIsOrderByCreationDateDesc.map(entity -> FindMainPageResponse.fromEntity(
+				entity,
 			commentRepository.countByMeeting_MeetingIdIs(entity.getMeetingId()),
 				applyRepository));
 	}
@@ -155,7 +156,7 @@ public class MeetingService {
 		}else {
 			List<GetMyMeetingListResponse> dtoList = new ArrayList<>();
 			for (Meeting meeting : myMeetingList) {
-				dtoList.add(GetMyMeetingListResponse.fromEntity(meeting));
+				dtoList.add(GetMyMeetingListResponse.fromEntity(meeting, applyRepository));
 			}
 			log.info("meetinglist dto  >>" + dtoList);
 			return dtoList;
@@ -202,7 +203,7 @@ public class MeetingService {
 		}else {
 			List<GetMyMeetingListResponse> dtoList = new ArrayList<>();
 			for (Meeting meeting :entityList) {
-				dtoList.add(GetMyMeetingListResponse.fromEntity(meeting));
+				dtoList.add(GetMyMeetingListResponse.fromEntity(meeting, applyRepository));
 			}
 			//log.info("meetinglist dto  >>" + dtoList);
 			return dtoList;

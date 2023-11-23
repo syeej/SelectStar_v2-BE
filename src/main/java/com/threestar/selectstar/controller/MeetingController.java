@@ -45,9 +45,10 @@ public class MeetingController {
     @GetMapping("/{id}")
     public ResponseEntity<FindMeetingOneResponse> meetingDetail(@PathVariable("id") int id,@AuthenticationPrincipal CustomUserDetails userDetails){
         FindMeetingOneResponse meetingOne = meetingService.findMeetingOne(id);
+
+        meetingOne.setImg(userService.getUserProfile(meetingOne.getUserId()).getProfilePhoto());
         if (userDetails != null){
         meetingOne.setLoginId(userDetails.getUserId());
-        meetingOne.setImg(userService.getUserProfile(meetingOne.getUserId()).getProfilePhoto());
         }
         return ResponseEntity.ok()
                 .body(meetingOne);
