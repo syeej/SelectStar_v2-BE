@@ -27,11 +27,11 @@
 ### 기술 스택
 <h4>Frontend</h4>
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"><img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"><img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"><img src="https://img.shields.io/badge/thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white">
-<h4>backend</h4>
+<h4>Backend</h4>
 <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> 
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=&logoColor=white">
 
-<h4>database</h4>
+<h4>Database</h4>
 <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
 <img src="https://img.shields.io/badge/Spring Data JPA-4479A1?style=for-the-badge">
 
