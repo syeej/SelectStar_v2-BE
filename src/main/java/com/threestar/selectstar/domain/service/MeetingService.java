@@ -158,7 +158,7 @@ public class MeetingService {
 			for (Meeting meeting : myMeetingList) {
 				dtoList.add(GetMyMeetingListResponse.fromEntity(meeting, applyRepository));
 			}
-			log.info("meetinglist dto  >>" + dtoList);
+			//log.info("meetinglist dto  >>" + dtoList);
 			return dtoList;
 		}
 	}
@@ -329,15 +329,15 @@ public class MeetingService {
     public List<GetMyApplyingListResponse> getMyApplyingList(int uId){
 
         List<Meeting> myApplyingList = meetingRepository.getMyApplyingList(uId, 0);
-        log.info("applyinglist entity  >>"+myApplyingList);
+        //log.info("applyinglist entity  >>"+myApplyingList);
         if(myApplyingList.isEmpty()){
             return null;
         }else {
             List<GetMyApplyingListResponse> dtoList = new ArrayList<>();
             for (Meeting meeting : myApplyingList) {
-                dtoList.add(GetMyApplyingListResponse.fromEntity(meeting));
+                dtoList.add(GetMyApplyingListResponse.fromEntity(meeting, applyRepository));
             }
-            log.info("meetinglist dto  >>" + dtoList);
+            //log.info("meetinglist dto  >>" + dtoList);
             return dtoList;
         }
     }
@@ -368,16 +368,12 @@ public class MeetingService {
         }
         List<Meeting> entityList;
         if((strStatus != null && !strStatus.isEmpty()) && (strCategory != null && !strCategory.isEmpty())){
-            System.out.println("cate, stat 다 있음 >"+category+status);
             entityList = meetingRepository.getMyApplyingListByCateAndSts(uId, 0, category, status);
         }else if((strStatus == null) && (strCategory != null && !strCategory.isEmpty())){
-            System.out.println("cate 있음 >"+category);
             entityList = meetingRepository.getMyApplyingListByCate(uId, 0, category);
         }else if((strStatus != null && !strStatus.isEmpty()) && (strCategory == null)){
-            System.out.println("stat 있음 >"+status);
             entityList = meetingRepository.getMyApplyingListByStatus(uId, 0, status);
         }else{
-            System.out.println("cate, stat 다 없음 >"+category+status);
             entityList = meetingRepository.getMyApplyingList(uId, 0);
         }
         if(entityList.isEmpty()){
@@ -385,7 +381,7 @@ public class MeetingService {
         }else {
             List<GetMyApplyingListResponse> dtoList = new ArrayList<>();
             for (Meeting meeting :entityList) {
-                dtoList.add(GetMyApplyingListResponse.fromEntity(meeting));
+                dtoList.add(GetMyApplyingListResponse.fromEntity(meeting, applyRepository));
             }
             //log.info("meetinglist dto  >>" + dtoList);
             return dtoList;
