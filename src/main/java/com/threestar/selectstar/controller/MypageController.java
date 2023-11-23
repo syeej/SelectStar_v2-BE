@@ -40,10 +40,9 @@ public class MypageController {
     public ResponseEntity<GetMyInfoResponse> getMyProfileInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
 
         int uId = userDetails.getUserId();
-        log.info("myprofile 조회 userId 찾기1  >>"+uId);
 
         GetMyInfoResponse res = userService.getMyProfileInfo(uId);
-        log.info("res >>"+res);
+        //log.info("res >>"+res);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
@@ -54,10 +53,9 @@ public class MypageController {
                                                @RequestBody UpdateMyInfoRequest userReq) {
         try {
             int uId = userDetails.getUserId();
-            log.info("myprofile 수정 userId 찾기1  >>" + uId);
 
             String res = userService.updateMyProfileInfo(uId, userReq);
-            log.info("update myProfileInfo res>> " + res);
+            //log.info("update myProfileInfo res>> " + res);
             if (res.equals("success")) {
                 return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
             } else {
@@ -74,10 +72,10 @@ public class MypageController {
     @ResponseBody
     public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
         int uId = userDetails.getUserId();
-        log.info("myinfo 조회 userId 찾기1  >>"+uId);
+        //log.info("myinfo 조회 userId 찾기1  >>"+uId);
 
         GetMyInfoResponse res = userService.getMyInfo(uId);
-        log.info("get myInfo res>> "+res);
+        //log.info("get myInfo res>> "+res);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
@@ -88,10 +86,9 @@ public class MypageController {
                                           @RequestBody UpdateMyInfoRequest req){
         try {
             int uId = userDetails.getUserId();
-            log.info("myinfo 수정 userId 찾기1  >>" + uId);
 
             String res = userService.updateMyInfo(uId, req);
-            log.info("update myProfileInfo res>> " + res);
+            log.info("update myProfileInfo res");
             if (res.equals("success")) {
                 return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
             } else {
@@ -102,13 +99,13 @@ public class MypageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
     }
+
     //내가 작성한 글 목록 조회
     @GetMapping("/users/mymeeting")
     @ResponseBody
     public ResponseEntity<?> getMyMeeingList(@AuthenticationPrincipal CustomUserDetails userDetails){
         try {
             int uId = userDetails.getUserId();
-            log.info("mymeeting 조회 userId 찾기1  >>" + uId);
 
             List<GetMyMeetingListResponse> res = meetingService.getMyMeetingList(uId);
             log.info("get mymeeting res >>" + res);
@@ -132,7 +129,6 @@ public class MypageController {
                                                       @RequestParam(name="status", required = false) String strStatus){
         try {
             int uId = userDetails.getUserId();
-            log.info("mymeeting filter 조회 userId 찾기1  >>" + uId);
 
             List<GetMyMeetingListResponse> res = meetingService.getMyMeetingListByFilter(uId, strCategory, strStatus);
             //log.info("get mymeetinglist by filter res >>"+res);
@@ -154,10 +150,9 @@ public class MypageController {
     public ResponseEntity<?> getMyApplyingList(@AuthenticationPrincipal CustomUserDetails userDetails){
         try {
             int uId = userDetails.getUserId();
-            log.info("mymeeting 조회 userId 찾기1  >>" + uId);
 
             List<GetMyApplyingListResponse> res = meetingService.getMyApplyingList(uId);
-            log.info("get applying res >>" + res);
+            //log.info("get applying res >>" + res);
             if (res == null) {
                 throw new MeetingNotFoundException("글이 없습니다.");
             } else {
@@ -176,10 +171,9 @@ public class MypageController {
                                                         @RequestParam(name="status", required = false) String strStatus){
         try {
             int uId = userDetails.getUserId();
-            log.info("mymeeting 조회 userId 찾기1  >>" + uId);
 
             List<GetMyApplyingListResponse> res = meetingService.getMyAppyingListByFilter(uId, strCategory, strStatus);
-            log.info("get applying filter res >>" + res);
+            //log.info("get applying filter res >>" + res);
             if (res == null || res.isEmpty()) {
                 throw new MeetingNotFoundException("글이 없습니다.");
             } else {
@@ -198,11 +192,10 @@ public class MypageController {
                                          @RequestPart(name = "profilePhoto") MultipartFile file){
         try {
             int uId = userDetails.getUserId();
-            log.info("profile 이미지 수정 userId 찾기1  >>" + uId);
-            //log.info("file check  >>"+file);
+
             UserImgFileDTO filedto = new UserImgFileDTO(file);
             String res = userService.updateMyProfileImg(uId, filedto);
-            //log.info("update myProfileInfo res>> "+res);
+            //log.info(res);
             if (res.equals("success")) {
                 return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
             } else {
@@ -213,4 +206,6 @@ public class MypageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(unfe.getMessage());
         }
     }
+
+
 }

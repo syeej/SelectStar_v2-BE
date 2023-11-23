@@ -87,7 +87,7 @@ public class UserController {
 	@ResponseBody
 	public ResponseEntity<?> getUserProfile(@PathVariable int id){
 		GetUserProfileResponse res = userService.getUserProfile(id);
-		log.info("res >>"+res);
+		//log.info("res >>"+res);
 		return ResponseEntity.status(HttpStatus.OK).body(res);
 	}
 
