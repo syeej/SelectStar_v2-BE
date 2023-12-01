@@ -57,7 +57,7 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpsecurity) throws Exception {
         httpsecurity
-                    .addFilter(corsConfig.corsFilter()) // Spring Security 사용시 CORS 설정을 하기 위해서 Authentication Filter 인증보다 앞에 필터를 추가
+                .addFilter(corsConfig.corsFilter()) // Spring Security 사용시 CORS 설정을 하기 위해서 Authentication Filter 인증보다 앞에 필터를 추가
                     .csrf().disable()  // CSRF 보호 비활성화
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않도록 설정
                 .and()
@@ -71,7 +71,7 @@ public class SpringSecurityConfig {
 
                 // 요청에 대한 권한 설정
                 .authorizeHttpRequests(authorize -> authorize  // authorizeRequests() : deprecated로 authorizeHttpRequest() 사용
-                .requestMatchers("/","/meeting","/apply/**","/meeting/**","/comment/meeting/**","/users/**" ,"/login","/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
+                .requestMatchers("/**","/assets/**","/","/index.html","/meeting","/apply/**","/meeting/**","/comment/meeting/**","/users/**" ,"/login","/rankMeeting", "/checkDuplicate", "/profiles/**", "/profiles/info/**").permitAll()  // 인증 필요 없음
 //                 .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자 구현 예정
                 .anyRequest().authenticated()  // 나머지는 인증 필요
                 );

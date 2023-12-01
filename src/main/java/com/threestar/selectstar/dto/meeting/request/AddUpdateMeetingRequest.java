@@ -18,18 +18,18 @@ import java.sql.Date;
 public class AddUpdateMeetingRequest {
     private Integer meetingId;
     private Integer userId;
-    @NotBlank(message = "must not be blank")
+    @NotBlank(message = "title must not be blank")
     private String title;
     private Integer category;
     private Integer status;
     private Date applicationDeadline;
     private Integer views;
-    @NotNull(message = "must not be null")
+    @NotNull(message = "recruitmentCount must not be null")
     private Integer recruitmentCount;
     private Integer applicationCount;
-    @NotBlank(message = "must not be blank")
+    @NotBlank(message = "location must not be blank")
     private String location;
-    @NotBlank(message = "must not be blank")
+    @NotBlank(message = "description must not be blank")
     private String description;
     private Date creationDate;
     private String interestLanguage;
