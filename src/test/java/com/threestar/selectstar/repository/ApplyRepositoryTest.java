@@ -38,12 +38,12 @@ class ApplyRepositoryTest {
         List<Apply> byApplyIDUserUserIdIs = applyRepository.findByApplyID_User_UserIdIs(1);
         System.out.println(byApplyIDUserUserIdIs);
     }
-    @Test
-    @DisplayName("글 신청 여부 조회")
-    void check(){
-        boolean byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs = applyRepository.existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(1, 8);
-        System.out.println(byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs);
-    }
+//    @Test
+//    @DisplayName("글 신청 여부 조회")
+//    void check(){
+//        boolean byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs = applyRepository.existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(1, 8);
+//        System.out.println(byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs);
+//    }
     @Test
     @DisplayName("저장 하기")
     void save(){
@@ -55,7 +55,7 @@ class ApplyRepositoryTest {
                 .emailAddress("emailAdd")
                 .build();
         applyRepository.save(build);
-        boolean byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs = applyRepository.existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(1, 9);
-        System.out.println(byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs);
+//        boolean byApplyIDUserUserIdIsAndApplyIDMeetingMeetingIdIs = applyRepository.existsByApplyID_User_UserIdIsAndApplyID_Meeting_MeetingIdIs(1, 9);
+
     }
 }
