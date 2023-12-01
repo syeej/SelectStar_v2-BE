@@ -18,7 +18,6 @@ public class CorsConfig {
         config.addAllowedOrigin("*");
 //        config.addAllowedOrigin("http://localhost:5173");  // 특정 Origin만 허용
 //        config.addAllowedOrigin("http://localhost:63342");
-
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.addExposedHeader("Authorization");  // Authorization 헤더를 노출하도록 설정 -  브라우저에서 클라이언트로부터 받은 응답 헤더 중 "Authorization"를 읽을 수 있게 함
