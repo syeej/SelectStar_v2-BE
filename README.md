@@ -24,7 +24,7 @@
 - 소개 : 스터디, 사이드프로젝트, 모각코 등 이용자 주변 지역에서 진행되는 개발자 모임 조회 및 생성
 <hr/>
 
-### <a href="[https://github.com/kosaThirdJo/secondProjectVue.js/tree/dev](https://github.com/syeej/SelectStar_v2)">시연 영상 보기 </a>
+### <a href="https://github.com/syeej/SelectStar_v2">시연 영상 보기 </a>
 
 ### 기술 스택
 <h4>Frontend</h4>
